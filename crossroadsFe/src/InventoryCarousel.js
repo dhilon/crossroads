@@ -56,10 +56,6 @@ function InventoryCarousel(props) {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleStepChange = (step) => {
-    setActiveStep(step);
-  };
-
   const { open, onClose } = props;
 
   if (open) {

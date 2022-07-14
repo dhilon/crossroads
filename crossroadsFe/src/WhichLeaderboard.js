@@ -5,7 +5,6 @@ import { Leaderboard, BatteryCharging90Outlined, CardMembershipOutlined, Filter1
 import Divider from '@mui/material/Divider'
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import PropTypes from 'prop-types';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import List from '@mui/material/List';

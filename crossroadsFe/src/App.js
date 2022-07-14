@@ -18,10 +18,8 @@ import Grid from '@mui/material/Grid';
 import * as React from "react";
 
 import IconButton from '@mui/material/IconButton';
-import Paper from '@mui/material/Paper';
 import {
   CalendarToday, 
-  Image, 
   Inventory, 
   ShoppingCart, 
   } from '@mui/icons-material';

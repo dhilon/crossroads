@@ -4,8 +4,6 @@ import Toolbar from '@mui/material/Toolbar';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import AdbIcon from '@mui/icons-material/Adb';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
@@ -16,32 +14,18 @@ import Paper from '@mui/material/Paper'
 import ProfileDialog from "./ProfileDialog.js";
 import FeedbackDialog from './FeedbackDialog.js';
 import rct from './logo60.png'
-import { Feed } from "@mui/icons-material";
 import AboutUsCarousel from "./AboutUsCarousel.js";
 
 
-const pages = ['About Us', 'Feedback'];
 
 function ResponsiveAppBar(props){
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const { profileClose, profileOpen, profileClickOpen } = props;
   const { feedbackOpen, feedbackClose, feedbackClickOpen } = props;
   const { aboutUsOpen, aboutUsClose, aboutUsClickOpen } = props;
 
   const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
   const handleClose = () => {
     setAnchorEl(null);
-  };
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
   };
 
   return (

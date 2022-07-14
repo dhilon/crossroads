@@ -1,17 +1,10 @@
 import * as React from "react";
 import {
-    Button,
-    Dialog,
-    DialogTitle,
-    Box,
     Card, 
     CardActionArea, 
-    CardActions, 
     CardContent, 
     Typography 
 } from '@mui/material';
-import PropTypes from 'prop-types';
-import { FixedSizeList } from 'react-window';
 
 function AboutUsCard(props) {
   return (
