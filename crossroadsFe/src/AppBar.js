@@ -94,7 +94,9 @@ function ResponsiveAppBar(props){
               <FeedbackDialog open = {feedbackOpen} onClose = {feedbackClose}/>
               <IconButton>
                 <Paper elevation = {4}>
-                  <img src={rct} className="rctlogo" alt="recty" />
+                  <a href = 'https://reactjs.org' target = '_blank'>
+                    <img src={rct} className="rctlogo" alt="recty" />
+                  </a>
                 </Paper>
               </IconButton>
               

@@ -6,6 +6,16 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import PropTypes from 'prop-types';
+import { PieChart, Series } from 'devextreme-react/pie-chart';
+
+const data = [{
+  arg: 'Right',
+  val: 60
+}, {
+  arg: 'Left',
+  val: 40
+}
+];
 
 
 function CalendarDialog(props) {
@@ -25,6 +35,17 @@ function CalendarDialog(props) {
             }}
           />
         </LocalizationProvider>
+        <PieChart
+          type = 'doughnut'
+          dataSource={data}
+        >
+          <Series 
+              argumentField="arg" 
+              valueField="val"
+          >
+          </Series>
+        </PieChart>
+        
       </Dialog>
     );
   }

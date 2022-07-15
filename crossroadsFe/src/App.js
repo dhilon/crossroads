@@ -1,6 +1,6 @@
 import './App.css';
 import logo from './download.jpg'
-
+import 'devextreme/dist/css/dx.light.css';
 import WhichLeaderboard from './WhichLeaderboard.js'
 import ResponsiveAppBar from './AppBar.js';
 import ProfileDialog from './ProfileDialog.js';
