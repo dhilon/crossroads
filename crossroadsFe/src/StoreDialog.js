@@ -6,8 +6,19 @@ import CardContent from '@mui/material/CardContent';
 import {CardMembershipOutlined} from '@mui/icons-material';
 
 
-function StoreCard(props) {
-  const { onClose } = props;
+class StoreCard extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      disabled: false
+    };
+  }
+
+  handleClose() {
+    this.setState({disabled: true});
+    this.props.onClose();
+  }
+  render() {
     return (
       <Card variant="outlined">
         <React.Fragment>
@@ -31,13 +42,14 @@ function StoreCard(props) {
               </Typography>
             </CardContent>
           <CardActions>
-            <Button size="small" onClick = {onClose}>
+            <Button size="small" onClick = {this.handleClose.bind(this)} disabled = {this.state.disabled}>
               Buy
             </Button>
           </CardActions>
         </React.Fragment>
       </Card>
     );
+    }
   }
 
 
