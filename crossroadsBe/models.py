@@ -1,6 +1,7 @@
 from django.db import models
 from pygments.lexers import get_all_lexers
 from pygments.styles import get_all_styles
+import django.contrib.auth
 
 # Create your models here.
 
@@ -8,14 +9,57 @@ LEXERS = [item for item in get_all_lexers() if item[1]]
 LANGUAGE_CHOICES = sorted([(item[1][0], item[0]) for item in LEXERS])
 STYLE_CHOICES = sorted([(item, item) for item in get_all_styles()])
 
+class Profile(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    streak = models.IntegerField()
+    points = models.IntegerField()
+    profileAuth = django.contrib.auth
+    #itemsUsed, hoursPlayed, hoursWon, itemsLeft, accountId, highestRanks all still need to be added
 
-class Snippet(models.Model):
+class Store_Item(models.Model):
+    points = models.IntegerField()
+    Strength1 = '1'
+    Strength2 = '2'
+    Strength3 = '3'
+    Strength4 = '4'
+    Strength5 = '5'
+    Strengths = [
+        (Strength1, '1'),
+        (Strength2, '2'),
+        (Strength3, '3'),
+        (Strength4, '4'),
+        (Strength5, '5'),
+    ]
+    year_in_school = models.CharField(
+        max_length=2,
+        choices=Strengths,
+        default=Strength1,
+    )
+    
+
+class Inventory(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=100, blank=True, default='')
     code = models.TextField()
     linenos = models.BooleanField(default=False)
     language = models.CharField(choices=LANGUAGE_CHOICES, default='python', max_length=100)
     style = models.CharField(choices=STYLE_CHOICES, default='friendly', max_length=100)
+    myProfile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    myStoreItem = models.ForeignKey(Store_Item, on_delete=models.CASCADE)
+    
+class Quiz(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    right = models.BooleanField(default=False)
+    left = models.BooleanField(default=False)
 
-    class Meta:
-        ordering = ['created']
+class Feedback(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    text = models.TextField()
+    points = models.IntegerField()
+    myProfile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+
+class Facts(models.Model):
+    text = models.TextField(choices=STYLE_CHOICES, default='friendly', max_length=200)
+
+
+    
