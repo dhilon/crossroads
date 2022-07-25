@@ -17,7 +17,7 @@ class Profile(models.Model):
     #itemsUsed, hoursPlayed, hoursWon, itemsLeft, accountId, highestRanks all still need to be added
 
 class Store_Item(models.Model):
-    points = models.IntegerField()
+    pointsCost = models.IntegerField()
     Strength1 = '1'
     Strength2 = '2'
     Strength3 = '3'
@@ -39,11 +39,7 @@ class Store_Item(models.Model):
 
 class Inventory(models.Model):
     created = models.DateTimeField(auto_now_add=True)
-    title = models.CharField(max_length=100, blank=True, default='')
-    code = models.TextField()
-    linenos = models.BooleanField(default=False)
-    language = models.CharField(choices=LANGUAGE_CHOICES, default='python', max_length=100)
-    style = models.CharField(choices=STYLE_CHOICES, default='friendly', max_length=100)
+    used = models.BooleanField(default=False)
     myProfile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     myStoreItem = models.ForeignKey(Store_Item, on_delete=models.CASCADE)
     
@@ -51,6 +47,13 @@ class Quiz(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     right = models.BooleanField(default=False)
     left = models.BooleanField(default=False)
+
+class Plays(models.Model):
+    myProfile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    myQuiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    right = models.BooleanField(default=False)
+    left = models.BooleanField(default=False)
+    win = models.BooleanField(default=True)
 
 class Feedback(models.Model):
     created = models.DateTimeField(auto_now_add=True)
