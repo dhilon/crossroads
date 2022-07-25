@@ -58,7 +58,6 @@ class Plays(models.Model):
 class Feedback(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     text = models.TextField()
-    points = models.IntegerField()
     myProfile = models.ForeignKey(Profile, on_delete=models.CASCADE)
 
 class Facts(models.Model):
