@@ -10,7 +10,7 @@ function ProfileDialog(props) {
       <div>
         <Dialog onClose={onClose} open={open}>
           <DialogTitle>All About YOU</DialogTitle>
-          Account ID:
+          Codename:
           <br></br>
           Created:
           <br></br>
