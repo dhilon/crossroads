@@ -2,6 +2,7 @@ from django.db import models
 from pygments.lexers import get_all_lexers
 from pygments.styles import get_all_styles
 import django.contrib.auth
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -11,12 +12,12 @@ STYLE_CHOICES = sorted([(item, item) for item in get_all_styles()])
 
 class Profile(models.Model):
     created = models.DateTimeField(auto_now_add=True)
-    streak = models.IntegerField()
-    points = models.IntegerField()
-    profileAuth = django.contrib.auth
+    streak = models.IntegerField(default = 0)
+    points = models.IntegerField(default = 0)
+    profileAuth = models.ForeignKey(User, on_delete=models.CASCADE)
     #itemsUsed, hoursPlayed, hoursWon, itemsLeft, accountId, highestRanks all still need to be added
 
-class Store_Item(models.Model):
+class StoreItem(models.Model):
     pointsCost = models.IntegerField()
     Strength1 = '1'
     Strength2 = '2'
@@ -41,12 +42,12 @@ class Inventory(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     used = models.BooleanField(default=False)
     myProfile = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    myStoreItem = models.ForeignKey(Store_Item, on_delete=models.CASCADE)
+    myStoreItem = models.ForeignKey(StoreItem, on_delete=models.CASCADE)
     
 class Quiz(models.Model):
     created = models.DateTimeField(auto_now_add=True)
-    right = models.BooleanField(default=False)
-    left = models.BooleanField(default=False)
+    rightWord = models.CharField(max_length=32, default = "right")
+    leftWord = models.CharField(max_length=32, default = "left")
 
 class Plays(models.Model):
     myProfile = models.ForeignKey(Profile, on_delete=models.CASCADE)
