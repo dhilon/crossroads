@@ -14,11 +14,14 @@ class Profile(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     streak = models.IntegerField(default = 0)
     points = models.IntegerField(default = 0)
-    profileAuth = models.ForeignKey(User, on_delete=models.CASCADE)
+    profileAuth = models.ForeignKey(User, on_delete=models.CASCADE, default="")
     #itemsUsed, hoursPlayed, hoursWon, itemsLeft, accountId, highestRanks all still need to be added
 
 class StoreItem(models.Model):
     pointsCost = models.IntegerField()
+    
+    name = models.CharField(max_length=32, default = "ultimate device")
+    
     Strength1 = '1'
     Strength2 = '2'
     Strength3 = '3'
@@ -50,6 +53,7 @@ class Quiz(models.Model):
     leftWord = models.CharField(max_length=32, default = "left")
 
 class Plays(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
     myProfile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     myQuiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     right = models.BooleanField(default=False)

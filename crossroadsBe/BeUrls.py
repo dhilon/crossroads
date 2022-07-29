@@ -4,5 +4,6 @@ from . import views
 
 urlpatterns = [
     path('crossroadsbe/', views.index, name='index'),
-    path('', views.index, name='index0'),
+    path('<int:question_id>/', views.vote, name='vote'),
+    path('calendar/', views.calendar, name='plays'),
 ]
