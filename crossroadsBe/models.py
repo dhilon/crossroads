@@ -3,6 +3,7 @@ from pygments.lexers import get_all_lexers
 from pygments.styles import get_all_styles
 import django.contrib.auth
 from django.contrib.auth.models import User
+from datetime import datetime
 
 # Create your models here.
 
@@ -10,13 +11,17 @@ LEXERS = [item for item in get_all_lexers() if item[1]]
 LANGUAGE_CHOICES = sorted([(item[1][0], item[0]) for item in LEXERS])
 STYLE_CHOICES = sorted([(item, item) for item in get_all_styles()])
 
+
 class Profile(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     streak = models.IntegerField(default = 0)
     points = models.IntegerField(default = 0)
     profileAuth = models.ForeignKey(User, on_delete=models.CASCADE, default="")
-    #itemsUsed, hoursPlayed, hoursWon, itemsLeft, accountId, highestRanks all still need to be added
-
+    hoursPlayed = models.IntegerField(default = 0)
+    hoursWon = models.IntegerField(default = 0)
+    highestStreak = models.IntegerField(default = 0)
+    highestPoints = models.IntegerField(default = 0)
+    
 class StoreItem(models.Model):
     pointsCost = models.IntegerField()
     
@@ -40,7 +45,11 @@ class StoreItem(models.Model):
         default=Strength1,
     )
     
+    createdAt = models.DateTimeField(default=datetime.now, blank=True)
+    boughtAt = models.DateTimeField(default=datetime.now, blank=True)
+    
 
+    
 class Inventory(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     used = models.BooleanField(default=False)
@@ -52,7 +61,7 @@ class Quiz(models.Model):
     rightWord = models.CharField(max_length=32, default = "right")
     leftWord = models.CharField(max_length=32, default = "left")
 
-class Plays(models.Model):
+class Play(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     myProfile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     myQuiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
@@ -65,8 +74,8 @@ class Feedback(models.Model):
     text = models.TextField()
     myProfile = models.ForeignKey(Profile, on_delete=models.CASCADE)
 
-class Facts(models.Model):
-    text = models.TextField(choices=STYLE_CHOICES, default='friendly', max_length=200)
+class Fact(models.Model):
+    title = models.TextField(max_length=200)
 
 
     
