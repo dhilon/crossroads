@@ -47,7 +47,7 @@ class PlaySerializer(serializers.ModelSerializer):
     class Meta:
         model = Play
         fields = '__all__'
-        read_only_fields = ['id', 'created', 'myProfile', 'myQuiz', 'winSide', 'ended']
+        read_only_fields = ['id', 'created', 'myProfile', 'myQuiz', 'winSide', 'ended', 'win']
     
     def to_internal_value(self, data):
         return {'right': bool(data.get('right')), 'left': bool(data.get('left'))}
