@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
-from crossroadsbe.serializer import *
+from crossroadsBe.serializer import *
 from rest_framework import generics
 
 # Create your views here.

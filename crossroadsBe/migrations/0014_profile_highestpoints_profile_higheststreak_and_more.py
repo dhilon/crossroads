@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('crossroadsbe', '0013_rename_text_fact_title'),
+        ('crossroadsBe', '0013_rename_text_fact_title'),
     ]
 
     operations = [

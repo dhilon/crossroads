@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from crossroadsbe.models import Fact, Profile, StoreItem, Inventory, Quiz, Play, Feedback
+from crossroadsBe.models import Fact, Profile, StoreItem, Inventory, Quiz, Play, Feedback
 
 
 class FactSerializer(serializers.ModelSerializer):

@@ -52,8 +52,8 @@ class Migration(migrations.Migration):
                 ('right', models.BooleanField(default=False)),
                 ('left', models.BooleanField(default=False)),
                 ('win', models.BooleanField(default=True)),
-                ('myProfile', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crossroadsbe.profile')),
-                ('myQuiz', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crossroadsbe.quiz')),
+                ('myProfile', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crossroadsBe.profile')),
+                ('myQuiz', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crossroadsBe.quiz')),
             ],
         ),
         migrations.CreateModel(
@@ -62,8 +62,8 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('used', models.BooleanField(default=False)),
-                ('myProfile', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crossroadsbe.profile')),
-                ('myStoreItem', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crossroadsbe.store_item')),
+                ('myProfile', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crossroadsBe.profile')),
+                ('myStoreItem', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crossroadsBe.store_item')),
             ],
         ),
         migrations.CreateModel(
@@ -72,7 +72,7 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('text', models.TextField()),
-                ('myProfile', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crossroadsbe.profile')),
+                ('myProfile', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='crossroadsBe.profile')),
             ],
         ),
     ]

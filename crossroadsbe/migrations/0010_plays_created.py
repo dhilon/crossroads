@@ -7,7 +7,7 @@ import django.utils.timezone
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('crossroadsbe', '0009_remove_storeitem_itemid'),
+        ('crossroadsBe', '0009_remove_storeitem_itemid'),
     ]
 
     operations = [

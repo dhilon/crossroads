@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('crossroadsbe', '0004_alter_quiz_leftword_alter_quiz_rightword'),
+        ('crossroadsBe', '0004_alter_quiz_leftword_alter_quiz_rightword'),
     ]
 
     operations = [

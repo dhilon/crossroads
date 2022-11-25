@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class CrossroadsbeConfig(AppConfig):
+class CrossroadsBeConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'crossroadsbe'
+    name = 'crossroadsBe'

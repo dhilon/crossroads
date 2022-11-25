@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('crossroadsbe', '0014_profile_highestpoints_profile_higheststreak_and_more'),
+        ('crossroadsBe', '0014_profile_highestpoints_profile_higheststreak_and_more'),
     ]
 
     operations = [

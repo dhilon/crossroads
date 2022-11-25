@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('crossroadsbe', '0003_remove_quiz_left_remove_quiz_right_quiz_leftword_and_more'),
+        ('crossroadsBe', '0003_remove_quiz_left_remove_quiz_right_quiz_leftword_and_more'),
     ]
 
     operations = [

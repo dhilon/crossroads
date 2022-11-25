@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('crossroadsbe', '0012_alter_fact_text'),
+        ('crossroadsBe', '0012_alter_fact_text'),
     ]
 
     operations = [
