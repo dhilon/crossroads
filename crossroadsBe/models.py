@@ -3,7 +3,8 @@ from pygments.lexers import get_all_lexers
 from pygments.styles import get_all_styles
 import django.contrib.auth
 from django.contrib.auth.models import User
-from datetime import datetime
+from django.utils import timezone
+import pytz
 
 # Create your models here.
 
@@ -23,7 +24,7 @@ class Profile(models.Model):
     highestPoints = models.IntegerField(default = 0)
     
 class StoreItem(models.Model):
-    pointsCost = models.IntegerField()
+    pointsCost = models.IntegerField(default=0)
     
     name = models.CharField(max_length=32, default = "ultimate device")
     
@@ -32,7 +33,7 @@ class StoreItem(models.Model):
     Strength3 = '3'
     Strength4 = '4'
     Strength5 = '5'
-    Strengths = [
+    strengths = [
         (Strength1, '1'),
         (Strength2, '2'),
         (Strength3, '3'),
@@ -41,14 +42,20 @@ class StoreItem(models.Model):
     ]
     year_in_school = models.CharField(
         max_length=2,
-        choices=Strengths,
+        choices=strengths,
         default=Strength1,
     )
     
-    createdAt = models.DateTimeField(default=datetime.now, blank=True)
-    boughtAt = models.DateTimeField(default=datetime.now, blank=True)
+    createdAt = models.DateTimeField(default=timezone.now, blank=True)
     
-
+    bought = models.BooleanField(default=False)
+    boughtAt = models.DateTimeField(null=True, blank=True)
+    
+    def save(self, *args, **kwargs):
+        if (self.bought == True and self.boughtAt is None):
+            self.boughtAt = timezone.now()
+        super().save(self, *args, **kwargs)
+        
     
 class Inventory(models.Model):
     created = models.DateTimeField(auto_now_add=True)
