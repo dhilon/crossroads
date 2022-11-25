@@ -46,15 +46,17 @@ class StoreItem(models.Model):
         default=Strength1,
     )
     
-    createdAt = models.DateTimeField(default=timezone.now, blank=True)
+    createdAt = models.DateTimeField(auto_now_add=True)
     
     bought = models.BooleanField(default=False)
     boughtAt = models.DateTimeField(null=True, blank=True)
     
     def save(self, *args, **kwargs):
-        if (self.bought == True and self.boughtAt is None):
+        if (self.bought == False and self.boughtAt is None): #buying the item
             self.boughtAt = timezone.now()
-        super().save(self, *args, **kwargs)
+        if (self.bought == True):
+            self.boughtAt = None
+        super().save(*args, **kwargs)
         
     
 class Inventory(models.Model):
@@ -70,11 +72,24 @@ class Quiz(models.Model):
 
 class Play(models.Model):
     created = models.DateTimeField(auto_now_add=True)
+    ended = models.DateTimeField(null=True, blank=True)
     myProfile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     myQuiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     right = models.BooleanField(default=False)
     left = models.BooleanField(default=False)
-    win = models.BooleanField(default=True)
+    winSide = models.BooleanField(default=False)
+    win = models.BooleanField(default=False)
+    
+    def save(self, *args, **kwargs):
+        if (self.winSide == True and self.right == True and self.ended < timezone.now()):
+            self.win == True
+        if (self.winSide == False and self.left == True and self.ended < timezone.now()):
+            self.win == True
+        if (self.right == True):
+            self.left = False
+        if (self.left == True):
+            self.right = False
+        super().save(*args, **kwargs)
 
 class Feedback(models.Model):
     created = models.DateTimeField(auto_now_add=True)

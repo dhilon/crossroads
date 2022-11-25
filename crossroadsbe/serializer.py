@@ -20,6 +20,16 @@ class StoreItemSerializer(serializers.ModelSerializer):
         model = StoreItem
         fields = '__all__'
         read_only_fields = ['id', 'pointsCost', 'name', 'createdAt', 'strengths', 'year_in_school', 'boughtAt']
+    
+    def to_internal_value(self, data):
+        return {'bought': bool(data.get('bought'))}
+        
+    def create(self, validated_data):
+        return StoreItem.objects.create(**validated_data)
+    
+    def update(self, instance, validated_data):
+        StoreItem.save(self=instance)
+        return StoreItem.objects.update(**validated_data)
 
 class InventorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -37,7 +47,17 @@ class PlaySerializer(serializers.ModelSerializer):
     class Meta:
         model = Play
         fields = '__all__'
-        read_only_fields = ['id', 'created', 'myProfile', 'myQuiz', 'win']
+        read_only_fields = ['id', 'created', 'myProfile', 'myQuiz', 'winSide', 'ended']
+    
+    def to_internal_value(self, data):
+        return {'right': bool(data.get('right')), 'left': bool(data.get('left'))}
+        
+    def create(self, validated_data):
+        return Play.objects.create(**validated_data)
+    
+    def update(self, instance, validated_data):
+        Play.save(self=instance)
+        return Play.objects.update(**validated_data)
 
 class FeedbackSerializer(serializers.ModelSerializer):
     class Meta:

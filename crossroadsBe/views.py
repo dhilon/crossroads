@@ -19,7 +19,7 @@ def calendar(request):
     output = ', '.join([q.created.__str__() for q in latest_question_list])
     return HttpResponse("All quizzes: " + output)
 
-class FactList(generics.ListCreateAPIView):
+class FactList(generics.ListAPIView):
     queryset = Fact.objects.all()
     serializer_class = FactSerializer
 
@@ -27,7 +27,7 @@ class FactDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Fact.objects.all()
     serializer_class = FactSerializer
 
-class ProfileList(generics.ListCreateAPIView):
+class ProfileList(generics.ListAPIView):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
 
@@ -35,7 +35,7 @@ class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
 
-class StoreItemList(generics.ListCreateAPIView):
+class StoreItemList(generics.ListAPIView):
     queryset = StoreItem.objects.all()
     serializer_class = StoreItemSerializer
 
@@ -43,7 +43,7 @@ class StoreItemDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = StoreItem.objects.all()
     serializer_class = StoreItemSerializer
 
-class PlayList(generics.ListCreateAPIView):
+class PlayList(generics.ListAPIView):
     queryset = Play.objects.all()
     serializer_class = PlaySerializer
 
@@ -51,7 +51,7 @@ class PlayDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Play.objects.all()
     serializer_class = PlaySerializer
 
-class InventoryList(generics.ListCreateAPIView):
+class InventoryList(generics.ListAPIView):
     queryset = Inventory.objects.all()
     serializer_class = InventorySerializer
 
@@ -59,7 +59,7 @@ class InventoryDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Inventory.objects.all()
     serializer_class = InventorySerializer
 
-class QuizList(generics.ListCreateAPIView):
+class QuizList(generics.ListAPIView):
     queryset = Quiz.objects.all()
     serializer_class = QuizSerializer
 
@@ -67,7 +67,7 @@ class QuizDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Quiz.objects.all()
     serializer_class = QuizSerializer
 
-class FeedbackList(generics.ListCreateAPIView):
+class FeedbackList(generics.ListAPIView):
     queryset = Feedback.objects.all()
     serializer_class = FeedbackSerializer
 
