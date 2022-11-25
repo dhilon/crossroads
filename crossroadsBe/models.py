@@ -47,23 +47,36 @@ class StoreItem(models.Model):
     )
     
     createdAt = models.DateTimeField(auto_now_add=True)
+    created = models.BooleanField(default=False)
     
     bought = models.BooleanField(default=False)
     boughtAt = models.DateTimeField(null=True, blank=True)
     
     def save(self, *args, **kwargs):
-        if (self.bought == False and self.boughtAt is None): #buying the item
-            self.boughtAt = timezone.now()
-        if (self.bought == True):
-            self.boughtAt = None
         super().save(*args, **kwargs)
+        if (self.bought == False and self.created == True): #buying the item
+            self.boughtAt = timezone.now()
+            return True
+        if (self.bought == True and self.created == True):
+            self.boughtAt = None
+            return False
+        self.created = True
+        
         
     
 class Inventory(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
+    createdAt = models.DateTimeField(auto_now_add=True)
     used = models.BooleanField(default=False)
     myProfile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     myStoreItem = models.ForeignKey(StoreItem, on_delete=models.CASCADE)
+    
+    isCreated = models.BooleanField(default=False)
+    
+    def save(self, *args, **kwargs):
+        if (self.used == False and self.isCreated == True): #buying the item
+            self.used = True
+        self.isCreated = True
+        super().save(*args, **kwargs)
     
 class Quiz(models.Model):
     created = models.DateTimeField(auto_now_add=True)

@@ -19,7 +19,7 @@ class StoreItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = StoreItem
         fields = '__all__'
-        read_only_fields = ['id', 'pointsCost', 'name', 'createdAt', 'strengths', 'year_in_school', 'boughtAt']
+        read_only_fields = ['id', 'pointsCost', 'name', 'createdAt', 'strengths', 'year_in_school', 'boughtAt', 'created']
 
     def to_internal_value(self, data):
         return {'bought': bool(data.get('bought'))}
@@ -28,14 +28,28 @@ class StoreItemSerializer(serializers.ModelSerializer):
         return StoreItem.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
-        StoreItem.save(self=instance)
+        bought = StoreItem.save(self=instance)
+        if (bought):
+            InventorySerializer.create(validated_data)
+        else:
+            InventorySerializer.update(validated_data)
         return StoreItem.objects.update(**validated_data)
 
 class InventorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Inventory
         fields = '__all__'
-        read_only_fields = ['id', 'created', 'used', 'myProfile', 'myStoreItem']
+        read_only_fields = ['id', 'createdAt', 'myProfile', 'myStoreItem', 'isCreated']
+    
+    def to_internal_value(self, data):
+        return {'used': bool(data.get('used'))}
+
+    def create(self, validated_data):
+        return Inventory.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        Inventory.save(self=instance)
+        return Inventory.objects.update(**validated_data)
 
 class QuizSerializer(serializers.ModelSerializer):
     class Meta:
