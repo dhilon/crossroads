@@ -41,13 +41,13 @@ class QuizSerializer(serializers.ModelSerializer):
     class Meta:
         model = Quiz
         fields = '__all__'
-        read_only_fields = ['id', 'created', 'rightWord', 'leftWord']
+        read_only_fields = ['id', 'created', 'rightWord', 'leftWord', 'ended']
 
 class PlaySerializer(serializers.ModelSerializer):
     class Meta:
         model = Play
         fields = '__all__'
-        read_only_fields = ['id', 'created', 'myProfile', 'myQuiz', 'winSide', 'ended', 'win']
+        read_only_fields = ['id', 'created', 'myProfile', 'myQuiz', 'winSide', 'win']
 
     def to_internal_value(self, data):
         return {'right': bool(data.get('right')), 'left': bool(data.get('left'))}

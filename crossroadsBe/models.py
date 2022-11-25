@@ -67,12 +67,12 @@ class Inventory(models.Model):
     
 class Quiz(models.Model):
     created = models.DateTimeField(auto_now_add=True)
+    ended = models.DateTimeField(null=True, blank=True)
     rightWord = models.CharField(max_length=32, default = "right")
     leftWord = models.CharField(max_length=32, default = "left")
 
 class Play(models.Model):
     created = models.DateTimeField(auto_now_add=True)
-    ended = models.DateTimeField(null=True, blank=True)
     myProfile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     myQuiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     right = models.BooleanField(default=False)
@@ -80,19 +80,6 @@ class Play(models.Model):
     winSide = models.BooleanField(default=False)
     win = models.BooleanField(default=False)
     
-    def save(self, *args, **kwargs):
-        if (self.winSide == True and self.right == True and self.ended == timezone.now()):
-            self.win == True
-        if (self.winSide == False and self.left == True and self.ended == timezone.now()):
-            self.win == True
-        if (self.right == True):
-            self.left = False
-        if (self.left == True):
-            self.right = False
-        super().save(*args, **kwargs)
-    
-    if timezone.now() == ended:
-        save()
     
     
 
