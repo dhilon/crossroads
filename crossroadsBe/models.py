@@ -81,15 +81,20 @@ class Play(models.Model):
     win = models.BooleanField(default=False)
     
     def save(self, *args, **kwargs):
-        if (self.winSide == True and self.right == True and self.ended < timezone.now()):
+        if (self.winSide == True and self.right == True and self.ended == timezone.now()):
             self.win == True
-        if (self.winSide == False and self.left == True and self.ended < timezone.now()):
+        if (self.winSide == False and self.left == True and self.ended == timezone.now()):
             self.win == True
         if (self.right == True):
             self.left = False
         if (self.left == True):
             self.right = False
         super().save(*args, **kwargs)
+    
+    if timezone.now() == ended:
+        save()
+    
+    
 
 class Feedback(models.Model):
     created = models.DateTimeField(auto_now_add=True)
