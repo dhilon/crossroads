@@ -20,6 +20,6 @@ urlpatterns = [
     path('inventory/<int:pk>/', views.InventoryDetail.as_view()),
     path('quizzes/', views.QuizList.as_view()),
     path('quizzes/<int:pk>/', views.QuizDetail.as_view()),
-    path('plays/', views.PlayList.as_view()),
-    path('plays/<int:pk>/', views.PlayDetail.as_view()),
+    path('quizzes/<int:pk>/plays', views.PlayList.as_view()),
+    path('quizzes/<int:pk>/plays/<int:pk2>/', views.PlayDetail.as_view()),
 ]

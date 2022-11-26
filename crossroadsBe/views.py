@@ -43,13 +43,26 @@ class StoreItemDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = StoreItem.objects.all()
     serializer_class = StoreItemSerializer
 
-class PlayList(generics.ListAPIView):
-    queryset = Play.objects.all()
+class PlayList(generics.ListCreateAPIView):
+    serializer_class = PlaySerializer
+    
+    def get_queryset(self):
+        return Play.objects.filter(quiz=self.kwargs[self.lookup_field])
+
+    def perform_create(self, serializer):
+        serializer.save(
+            quiz=Quiz.objects.get(pk=self.kwargs[self.lookup_field]),
+            player=self.request.user
+            )
+
+class PlayDetail(generics.RetrieveUpdateAPIView):
     serializer_class = PlaySerializer
 
-class PlayDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Play.objects.all()
-    serializer_class = PlaySerializer
+    def get_queryset(self):
+        return Play.objects.filter(pk=self.kwargs['pk2'])
+
+    def get_object(self):
+        return Play.objects.get(pk=self.kwargs['pk2']) 
 
 class InventoryList(generics.ListAPIView):
     queryset = Inventory.objects.all()
@@ -59,11 +72,20 @@ class InventoryDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Inventory.objects.all()
     serializer_class = InventorySerializer
 
+class InventoryStorItemList(generics.ListAPIView):
+    queryset = InventoryStoreItem.objects.all()
+    serializer_class = InventoryStoreItemSerializer
+
+class InventoryStoreItemDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = InventoryStoreItem.objects.all()
+    serializer_class = InventoryStoreItemSerializer
+
+
 class QuizList(generics.ListAPIView):
     queryset = Quiz.objects.all()
     serializer_class = QuizSerializer
 
-class QuizDetail(generics.RetrieveUpdateDestroyAPIView):
+class QuizDetail(generics.RetrieveAPIView):
     queryset = Quiz.objects.all()
     serializer_class = QuizSerializer
 

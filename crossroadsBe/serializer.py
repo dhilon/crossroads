@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from crossroadsBe.models import Fact, Profile, StoreItem, Inventory, Quiz, Play, Feedback
+from crossroadsBe.models import Fact, InventoryStoreItem, Profile, StoreItem, Inventory, Quiz, Play, Feedback
 
 
 class FactSerializer(serializers.ModelSerializer):
@@ -9,49 +9,40 @@ class FactSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'title']
 
 class ProfileSerializer(serializers.ModelSerializer):
+    user = serializers.SlugRelatedField(read_only=True, slug_field='username')
+
     class Meta:
         model = Profile
         fields = '__all__'
-        read_only_fields = ['id', 'created', 'streak', 'profileAuth', 'points', 'hoursPlayed', 'hoursWon', 'accountId', 'highestStreak', 'highestPoints']
+        read_only_fields = ['id', 'created', 'streak', 'user', 'points', 'hoursPlayed', 'hoursWon', 'accountId', 'highestStreak', 'highestPoints']
 
 
 class StoreItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = StoreItem
         fields = '__all__'
-        read_only_fields = ['id', 'pointsCost', 'name', 'createdAt', 'strengths', 'year_in_school', 'boughtAt', 'created']
+        read_only_fields = ['id', 'pointsCost', 'name', 'powerLevel', 'createdAt']
 
-    def to_internal_value(self, data):
-        return {'bought': bool(data.get('bought'))}
-
-    def create(self, validated_data):
-        return StoreItem.objects.create(**validated_data)
-
-    def update(self, instance, validated_data):
-        bought = StoreItem.save(self=instance)
-        if (bought):
-            InventorySerializer.create(validated_data)
-        else:
-            InventorySerializer.update(validated_data)
-        return StoreItem.objects.update(**validated_data)
 
 class InventorySerializer(serializers.ModelSerializer):
+    items = serializers.PrimaryKeyRelatedField(many=True, queryset=InventoryStoreItem.objects.all())
+
     class Meta:
         model = Inventory
         fields = '__all__'
-        read_only_fields = ['id', 'createdAt', 'myProfile', 'myStoreItem', 'isCreated']
+        read_only_fields = ['id', 'profile']
     
-    def to_internal_value(self, data):
-        return {'used': bool(data.get('used'))}
 
-    def create(self, validated_data):
-        return Inventory.objects.create(**validated_data)
-
-    def update(self, instance, validated_data):
-        Inventory.save(self=instance)
-        return Inventory.objects.update(**validated_data)
+class InventoryStoreItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InventoryStoreItem
+        fields = '_all_'
+        read_only_fields = ['id', 'inventory', 'storeItem', 'boughtAt']
+        
 
 class QuizSerializer(serializers.ModelSerializer):
+    plays = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+
     class Meta:
         model = Quiz
         fields = '__all__'
@@ -61,10 +52,10 @@ class PlaySerializer(serializers.ModelSerializer):
     class Meta:
         model = Play
         fields = '__all__'
-        read_only_fields = ['id', 'created', 'myProfile', 'myQuiz', 'winSide', 'win']
+        read_only_fields = ['id', 'created', 'player', 'quiz']
 
     def to_internal_value(self, data):
-        return {'right': bool(data.get('right')), 'left': bool(data.get('left'))}
+        return {'choice': data.get('choice')}
 
     def create(self, validated_data):
         return Play.objects.create(**validated_data)
@@ -77,4 +68,4 @@ class FeedbackSerializer(serializers.ModelSerializer):
     class Meta:
         model = Feedback
         fields = '__all__'
-        read_only_fields = ['id', 'text', 'created', 'myProfile']
+        read_only_fields = ['id', 'text', 'created', 'author']

@@ -5,6 +5,7 @@ import django.contrib.auth
 from django.contrib.auth.models import User
 from django.utils import timezone
 import pytz
+from django.core.exceptions import ValidationError
 
 # Create your models here.
 
@@ -14,15 +15,19 @@ STYLE_CHOICES = sorted([(item, item) for item in get_all_styles()])
 
 
 class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+
     created = models.DateTimeField(auto_now_add=True)
     streak = models.IntegerField(default = 0)
     points = models.IntegerField(default = 0)
-    profileAuth = models.ForeignKey(User, on_delete=models.CASCADE, default="")
     hoursPlayed = models.IntegerField(default = 0)
     hoursWon = models.IntegerField(default = 0)
     highestStreak = models.IntegerField(default = 0)
     highestPoints = models.IntegerField(default = 0)
-    
+
+class Inventory(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
 class StoreItem(models.Model):
     pointsCost = models.IntegerField(default=0)
     
@@ -40,44 +45,20 @@ class StoreItem(models.Model):
         (Strength4, '4'),
         (Strength5, '5'),
     ]
-    year_in_school = models.CharField(
+    powerLevel = models.CharField(
         max_length=2,
         choices=strengths,
         default=Strength1,
     )
     
     createdAt = models.DateTimeField(auto_now_add=True)
-    created = models.BooleanField(default=False)
     
-    bought = models.BooleanField(default=False)
-    boughtAt = models.DateTimeField(null=True, blank=True)
-    
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        if (self.bought == False and self.created == True): #buying the item
-            self.boughtAt = timezone.now()
-            return True
-        if (self.bought == True and self.created == True):
-            self.boughtAt = None
-            return False
-        self.created = True
+
+class InventoryStoreItem(models.Model):
+    inventory = models.ForeignKey(Inventory, on_delete=models.CASCADE)
+    storeItem = models.ForeignKey(StoreItem, on_delete=models.CASCADE)
+    boughtAt = models.DateTimeField(auto_now_add=True)
         
-        
-    
-class Inventory(models.Model):
-    createdAt = models.DateTimeField(auto_now_add=True)
-    used = models.BooleanField(default=False)
-    myProfile = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    myStoreItem = models.ForeignKey(StoreItem, on_delete=models.CASCADE)
-    
-    isCreated = models.BooleanField(default=False)
-    
-    def save(self, *args, **kwargs):
-        if (self.used == False and self.isCreated == True): #buying the item
-            self.used = True
-        self.isCreated = True
-        super().save(*args, **kwargs)
-    
 class Quiz(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     ended = models.DateTimeField(null=True, blank=True)
@@ -86,20 +67,28 @@ class Quiz(models.Model):
 
 class Play(models.Model):
     created = models.DateTimeField(auto_now_add=True)
-    myProfile = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    myQuiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
-    right = models.BooleanField(default=False)
-    left = models.BooleanField(default=False)
-    winSide = models.BooleanField(default=False)
-    win = models.BooleanField(default=False)
+    player = models.ForeignKey(User, on_delete=models.CASCADE)
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+
+    choices = [
+        ('Right', 'Right'),
+        ('Left', 'Left')
+    ]
+    choice = models.CharField(max_length=5, choices=choices, default='Left')
     
-    
-    
+    def clean(self):
+        if (self.quiz.ended is not None):
+            raise ValidationError({'myQuiz': 'The quiz has ended and can no longer be voted'})
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
+
 
 class Feedback(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     text = models.TextField()
-    myProfile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
 
 class Fact(models.Model):
     title = models.TextField(max_length=200)
