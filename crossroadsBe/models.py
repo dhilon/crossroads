@@ -15,7 +15,7 @@ STYLE_CHOICES = sorted([(item, item) for item in get_all_styles()])
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    user = models.OneToOneField(User, related_name='profile', on_delete=models.CASCADE, primary_key=True)
 
     created = models.DateTimeField(auto_now_add=True)
     streak = models.IntegerField(default = 0)
@@ -26,7 +26,7 @@ class Profile(models.Model):
     highestPoints = models.IntegerField(default = 0)
 
 class Inventory(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='inventory', on_delete=models.CASCADE)
 
 class StoreItem(models.Model):
     pointsCost = models.IntegerField(default=0)
@@ -55,8 +55,8 @@ class StoreItem(models.Model):
     
 
 class InventoryStoreItem(models.Model):
-    inventory = models.ForeignKey(Inventory, on_delete=models.CASCADE)
-    storeItem = models.ForeignKey(StoreItem, on_delete=models.CASCADE)
+    inventory = models.ForeignKey(Inventory, related_name='inventoryStoreItems', on_delete=models.CASCADE)
+    storeItem = models.ForeignKey(StoreItem, related_name='inventoryStoreItems', on_delete=models.CASCADE)
     boughtAt = models.DateTimeField(auto_now_add=True)
         
 class Quiz(models.Model):
@@ -67,8 +67,8 @@ class Quiz(models.Model):
 
 class Play(models.Model):
     created = models.DateTimeField(auto_now_add=True)
-    player = models.ForeignKey(User, on_delete=models.CASCADE)
-    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    player = models.ForeignKey(User, related_name='plays', on_delete=models.CASCADE)
+    quiz = models.ForeignKey(Quiz, related_name='plays', on_delete=models.CASCADE)
 
     choices = [
         ('Right', 'Right'),
@@ -88,7 +88,7 @@ class Play(models.Model):
 class Feedback(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     text = models.TextField()
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, related_name='feedbacks', on_delete=models.CASCADE)
 
 class Fact(models.Model):
     title = models.TextField(max_length=200)
