@@ -6,7 +6,7 @@ from rest_framework import generics
 # Create your views here.
 
 from django.http import HttpResponse
-from .models import Profile, StoreItem, Inventory, Quiz, Play, Feedback, Fact
+from .models import Profile, StoreItem, Quiz, Play, Feedback, Fact
 
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
@@ -27,13 +27,10 @@ class FactDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Fact.objects.all()
     serializer_class = FactSerializer
 
-class ProfileList(generics.ListAPIView):
-    queryset = Profile.objects.all()
+class ProfileDetail(generics.ListAPIView):
     serializer_class = ProfileSerializer
-
-class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Profile.objects.all()
-    serializer_class = ProfileSerializer
+    def get_queryset(self):
+        return Profile.objects.filter(user=self.request.user)
 
 class StoreItemList(generics.ListAPIView):
     queryset = StoreItem.objects.all()
@@ -64,17 +61,11 @@ class PlayDetail(generics.RetrieveUpdateAPIView):
     def get_object(self):
         return Play.objects.get(pk=self.kwargs['pk2']) 
 
-class InventoryList(generics.ListAPIView):
-    queryset = Inventory.objects.all()
-    serializer_class = InventorySerializer
-
-class InventoryDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Inventory.objects.all()
-    serializer_class = InventorySerializer
-
-class InventoryStorItemList(generics.ListAPIView):
-    queryset = InventoryStoreItem.objects.all()
+class InventoryStoreItemList(generics.ListAPIView):
     serializer_class = InventoryStoreItemSerializer
+    def get_queryset(self):
+        inventory = Inventory.objects.get(user=self.request.user)
+        return InventoryStoreItem.objects.filter(inventory=inventory)
 
 class InventoryStoreItemDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = InventoryStoreItem.objects.all()

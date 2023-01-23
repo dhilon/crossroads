@@ -24,6 +24,7 @@ function ResponsiveAppBar(props){
   const { aboutUsOpen, aboutUsClose, aboutUsClickOpen } = props;
 
   const open = Boolean(anchorEl);
+  const feedback = FeedbackDialog.feedback
   const handleClose = () => {
     setAnchorEl(null);
   };

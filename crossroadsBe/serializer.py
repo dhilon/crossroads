@@ -27,22 +27,16 @@ class StoreItemSerializer(serializers.ModelSerializer):
         model = StoreItem
         fields = '__all__'
         read_only_fields = ['id', 'pointsCost', 'name', 'powerLevel', 'createdAt']
-
-
-class InventorySerializer(serializers.ModelSerializer):
-    items = serializers.PrimaryKeyRelatedField(many=True, queryset=InventoryStoreItem.objects.all())
-
-    class Meta:
-        model = Inventory
-        fields = '__all__'
-        read_only_fields = ['id', 'profile']
     
 
 class InventoryStoreItemSerializer(serializers.ModelSerializer):
+    
+    storeItem = StoreItemSerializer(many=False, read_only=True)
+    
     class Meta:
         model = InventoryStoreItem
-        fields = '_all_'
-        read_only_fields = ['id', 'inventory', 'storeItem', 'boughtAt']
+        fields = ['id', 'storeItem', 'boughtAt']
+        read_only_fields = ['id', 'storeItem', 'boughtAt']
         
 
 

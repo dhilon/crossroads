@@ -23,6 +23,8 @@ function FeedbackDialog(props) {
     );
   }
 
+var feedback = FeedbackDialog.getElementById("feedbackText").value;
+
 FeedbackDialog.propTypes = {
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
