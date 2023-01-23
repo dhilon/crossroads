@@ -9,7 +9,7 @@ import SendIcon from '@mui/icons-material/Send';
 
 
 function FeedbackDialog(props) {
-    const { onClose, open } = props;
+    const { onClose, open, feedback } = props;
   
     return (
       <Dialog onClose={onClose} open={open}>
@@ -17,7 +17,7 @@ function FeedbackDialog(props) {
         <Typography variant = "body1" sx = {{padding: 1}}>
           All feedback is good feedback! 
         </Typography>
-        <TextField id="outlined-basic" label="Enter feedback here: 😁" variant="outlined" />
+        <TextField name = "feedbackText" id="outlined-basic" label="Enter feedback here: 😁" variant="outlined" />
         <Button variant="contained" endIcon={<SendIcon />} onClick = {onClose} > Send </Button>
       </Dialog>
     );
@@ -26,6 +26,7 @@ function FeedbackDialog(props) {
 FeedbackDialog.propTypes = {
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
+  feedback: document.getElementById('feedbackText').value
 };
 
 export default FeedbackDialog;
