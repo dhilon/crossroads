@@ -51,8 +51,8 @@ class App extends React.Component {
   handleOpenClose(stateVar) {
     var newState = {};
     newState[stateVar] = !this.state[stateVar];
-    if (stateVar == 'voteOpen') {
-      if (this.state.leftright == true) {
+    if (stateVar === 'voteOpen') {
+      if (this.state.leftright === true) {
         this.setState(newState)
       }
     }
