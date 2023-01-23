@@ -4,3 +4,4 @@ env/*
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+crossroadsFe/package-lock.json
