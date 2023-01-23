@@ -51,7 +51,14 @@ class App extends React.Component {
   handleOpenClose(stateVar) {
     var newState = {};
     newState[stateVar] = !this.state[stateVar];
-    this.setState(newState);
+    if (stateVar == 'voteOpen') {
+      if (this.state.leftright == true) {
+        this.setState(newState)
+      }
+    }
+    else {
+      this.setState(newState);
+    }
   }
   
   render () {
@@ -113,7 +120,7 @@ class App extends React.Component {
           </Grid>
 
           <Grid item xs={3}>
-            <Button disabled={this.state.leftright} onClick={this.handleOpenClose.bind(this, 'leftright')}>
+            <Button disabled={this.state.leftright && this.state.voteOpen} onClick={this.handleOpenClose.bind(this, 'leftright')}>
               Right
             </Button>
           </Grid>
