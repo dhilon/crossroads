@@ -19,15 +19,8 @@ import AboutUsCarousel from "./AboutUsCarousel.js";
 
 
 function ResponsiveAppBar(props){
-  const [anchorEl, setAnchorEl] = React.useState(null);
   const { feedbackOpen, feedbackClose, feedbackClickOpen } = props;
   const { aboutUsOpen, aboutUsClose, aboutUsClickOpen } = props;
-
-  const open = Boolean(anchorEl);
-  const feedback = FeedbackDialog.feedback
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   return (
     <div>
@@ -107,9 +100,6 @@ function ResponsiveAppBar(props){
               <Tooltip title="Open profile settings">
                 <IconButton onClick={props.profileClickOpen} sx={{ p: 0 }}
                 id="profile-button"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
                 >
                   <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
                   <ProfileDialog open = {props.profileOpen} onClose = {props.profileClose}/>
