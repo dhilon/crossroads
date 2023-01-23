@@ -9,7 +9,7 @@ import SendIcon from '@mui/icons-material/Send';
 
 
 function FeedbackDialog(props) {
-    const { onClose, open, feedback } = props;
+    const { onClose, open} = props;
   
     return (
       <Dialog onClose={onClose} open={open}>
@@ -26,7 +26,6 @@ function FeedbackDialog(props) {
 FeedbackDialog.propTypes = {
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
-  feedback: document.getElementById('feedbackText').value
 };
 
 export default FeedbackDialog;
