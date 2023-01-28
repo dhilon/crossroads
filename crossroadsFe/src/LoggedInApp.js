@@ -3,7 +3,6 @@ import logo from './download.jpg'
 import 'devextreme/dist/css/dx.light.css';
 import WhichLeaderboard from './WhichLeaderboard.js'
 import ResponsiveAppBar from './AppBar.js';
-import ProfileDialog from './ProfileDialog.js';
 import HTPDialog from './HTPDialog.js';
 import DFDialog from './DFDialog.js';
 import CalendarDialog from './CalendarDialog.js';
