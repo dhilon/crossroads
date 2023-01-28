@@ -1,10 +1,9 @@
-import DialogTitle from '@mui/material/DialogTitle';
-import Dialog from '@mui/material/Dialog';
+import { Dialog, DialogTitle, Button } from "@mui/material";
 import PropTypes from 'prop-types';
 
 
 function ProfileDialog(props) {
-    const { onClose, open } = props;
+    const { onClose, open, onLogOut } = props;
   
     return (
       <div>
@@ -21,6 +20,7 @@ function ProfileDialog(props) {
           Highest Streak Rank:
           <br></br>
           Highest Points Rank: 
+          <Button id = "logout" variant = "contained" label = "Log Out" onClick = {props.onLogOut}>Log Out</Button>
         </Dialog>
       </div>
       
@@ -30,6 +30,7 @@ function ProfileDialog(props) {
 ProfileDialog.propTypes = {
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
+  onLogOut: PropTypes.func.isRequired
 };
 
 export default ProfileDialog

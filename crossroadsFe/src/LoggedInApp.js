@@ -182,8 +182,8 @@ class LoggedInApp extends React.Component {
             aboutUsOpen = {this.state.aboutUsOpen}
             aboutUsClose = {this.handleOpenClose.bind(this, 'aboutUsOpen')}
             aboutUsClickOpen = {this.handleOpenClose.bind(this, 'aboutUsOpen')}
+            handleLogOut = {this.props.handleLogOut}
             />
-            <ProfileDialog open = {this.state.profileOpen} onClose = {this.handleOpenClose.bind(this, 'profileOpen')}/>
           </Grid>
 
 

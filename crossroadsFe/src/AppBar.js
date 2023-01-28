@@ -1,16 +1,7 @@
 import * as React from "react";
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Avatar from '@mui/material/Avatar';
-import Tooltip from '@mui/material/Tooltip';
+import { AppBar, Toolbar, Avatar, Tooltip, Container, Typography, Button, Box, IconButton, Paper } from "@mui/material";
 import AdbIcon from '@mui/icons-material/Adb';
 import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import Paper from '@mui/material/Paper'
 import ProfileDialog from "./ProfileDialog.js";
 import FeedbackDialog from './FeedbackDialog.js';
 import rct from './logo60.png'
@@ -19,8 +10,7 @@ import AboutUsCarousel from "./AboutUsCarousel.js";
 
 
 function ResponsiveAppBar(props){
-  const { feedbackOpen, feedbackClose, feedbackClickOpen } = props;
-  const { aboutUsOpen, aboutUsClose, aboutUsClickOpen } = props;
+  const { feedbackOpen, feedbackClose, feedbackClickOpen, aboutUsOpen, aboutUsClose, aboutUsClickOpen, handleLogOut } = props;
 
   return (
     <div>
@@ -102,7 +92,7 @@ function ResponsiveAppBar(props){
                 id="profile-button"
                 >
                   <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-                  <ProfileDialog open = {props.profileOpen} onClose = {props.profileClose}/>
+                  <ProfileDialog open = {props.profileOpen} onClose = {props.profileClose} onLogOut = {props.handleLogOut}/>
                 </IconButton>
               </Tooltip>
             </Box>

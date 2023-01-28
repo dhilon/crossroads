@@ -7,27 +7,57 @@ class LoggedOutApp extends React.Component {
         super(props);
         this.state = {
             email: '',
-            response: ''
+            response: '',
+            token: '',
+            errorMessage: ''
         }
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleEmailChange = this.handleEmailChange.bind(this);
+        this.handleTokenChange = this.handleTokenChange.bind(this);
+        this.handleTokenSubmit = this.handleTokenSubmit.bind(this);
     }
     handleEmailChange(event) {
         this.setState({email: event.target.value})
     }
+    handleTokenChange(event) {
+        this.setState({token: event.target.value})
+    }
     async handleSubmit() {
-        const response = await axios.post('http://localhost:8000/auth/email/', {email:this.state.email}, {headers: {"Access-Control-Allow-Origin": "http://localhost:8000", "Content-Type": "application/json", "Access-Control-Allow-Methods": "POST"}});
-        this.setState({response: response});
-
+        try {
+            const response = await axios.post('http://localhost:8000/auth/email/', {email:this.state.email});
+            this.setState({response: response.data.detail});
+        }
+        catch (error) {
+            this.setState({errorMessage: "There was an error with your email. " + error.message})
+        }
+        
+    }
+    async handleTokenSubmit() {
+        const response = await axios.post('http://localhost:8000/auth/token/', {email:this.state.email, token:this.state.token});
+        this.props.handleLogIn(response.data.token)
     }
     render() {
-        return (
-            <div>
-                <TextField id="email" value = {this.state.email} label="Email" variant="outlined" onChange = {this.handleEmailChange}/>
-                <Button id = "submit" label = "Submit" variant = "contained" onClick = {this.handleSubmit}>Submit</Button>
-                <div>{this.state.response}</div>
-            </div>
-        )
+        if (this.state.response === '') {
+            return (
+                <div>
+                    <TextField id="email" value = {this.state.email} label="Email" variant="outlined" onChange = {this.handleEmailChange}/>
+                    <Button id = "submit" label = "Submit" variant = "contained" onClick = {this.handleSubmit}>Submit</Button>
+                    <div>{this.state.response}</div>
+                    <div>{this.state.errorMessage}</div>
+                    <div>{this.props.errorToken}</div>
+                </div>
+            )
+        }
+        else {
+            return (
+                <div>
+                    <TextField id="token" value = {this.state.token} label="Token" variant="outlined" onChange = {this.handleTokenChange}/>
+                    <Button id = "continue" label = "Continue" variant = "contained" onClick = {this.handleTokenSubmit}>Continue</Button>
+                    <div>{this.props.errorToken}</div>
+                </div>
+            )
+        }
+        
     }
 }
 
