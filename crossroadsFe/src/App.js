@@ -20,6 +20,10 @@ class App extends React.Component {
         }
         this.handleLogIn = this.handleLogIn.bind(this);
         this.handleLogOut = this.handleLogOut.bind(this);
+    }
+
+
+    componentDidMount() {
         this.loadToken();
     }
 
