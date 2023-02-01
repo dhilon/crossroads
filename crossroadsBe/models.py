@@ -30,8 +30,9 @@ class Profile(models.Model):
     points = models.IntegerField(default = 0)
     hoursPlayed = models.IntegerField(default = 0)
     hoursWon = models.IntegerField(default = 0)
+    highestStreakRank = models.IntegerField(default = 0)
     highestStreak = models.IntegerField(default = 0)
-    highestPoints = models.IntegerField(default = 0)
+    
 
 class Inventory(models.Model):
     user = models.ForeignKey(User, related_name='inventory', on_delete=models.CASCADE)
