@@ -27,10 +27,14 @@ class FactDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Fact.objects.all()
     serializer_class = FactSerializer
 
-class ProfileDetail(generics.ListAPIView):
+class ProfileDetail(generics.RetrieveAPIView):
     serializer_class = ProfileSerializer
-    def get_queryset(self):
-        return Profile.objects.filter(user=self.request.user)
+    queryset = Profile.objects.all()
+
+    def get_object(self):
+        obj = Profile.objects.get(user=self.request.user)
+        return obj
+    
 
 class StoreItemList(generics.ListAPIView):
     queryset = StoreItem.objects.all()
