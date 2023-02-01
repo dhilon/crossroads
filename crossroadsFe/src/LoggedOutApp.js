@@ -24,7 +24,7 @@ class LoggedOutApp extends React.Component {
     }
     async handleSubmit() {
         try {
-            const response = await axios.post('http://localhost:8000/auth/email/', {email:this.state.email});
+            const response = await axios.post('/auth/email/', {email:this.state.email});
             this.setState({response: response.data.detail});
         }
         catch (error) {
@@ -33,7 +33,7 @@ class LoggedOutApp extends React.Component {
         
     }
     async handleTokenSubmit() {
-        const response = await axios.post('http://localhost:8000/auth/token/', {email:this.state.email, token:this.state.token});
+        const response = await axios.post('/auth/token/', {email:this.state.email, token:this.state.token});
         this.props.handleLogIn(response.data.token)
     }
     render() {

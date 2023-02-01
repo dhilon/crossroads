@@ -1,14 +1,11 @@
 import React from "react";
 import LoggedInApp from "./LoggedInApp";
 import LoggedOutApp from "./LoggedOutApp";
-import { createAuthProvider } from 'react-token-auth';
 import localforage from "localforage";
 import { CircularProgress } from "@mui/material";
+import axios from "axios";
 
-
-export const { useAuth, authFetch, login, logout } = createAuthProvider({ 
-    //getAccessToken
-})
+axios.defaults.baseURL = "http://localhost:8000";
 
 class App extends React.Component {
     constructor(props) {
@@ -27,23 +24,36 @@ class App extends React.Component {
         this.loadToken();
     }
 
+    enableLogin(token) {
+        axios.defaults.headers.common['Authorization'] = "Token " + token;
+        this.setState({token: token})
+    }
+
+    disableLogin() {
+        delete axios.defaults.headers.common.Authorization;
+        this.setState({token: ''})
+    }
+
     async loadToken() {
         try {
-            const token = await localforage.getItem("authToken");
-            this.setState({token: token});
+            let token = await localforage.getItem("authToken");
+            if (token == null) {
+                this.disableLogin()
+            } else {
+                this.enableLogin(token);
+            }
             this.setState({loading: false});
         }
         catch {
-            
+           // do nothing because we are still loading 
         }
 
     }
 
     async handleLogIn(token) {
-        
         try {
-            const valueToken = await localforage.setItem({"authToken": token});
-            this.setState({token: token});
+            await localforage.setItem("authToken", token);
+            this.enableLogin(token);
         }
         catch (error) {
             this.setState({errorToken: "You entered something wrong ..." + error.message});
@@ -52,14 +62,12 @@ class App extends React.Component {
     }
 
     async handleLogOut() {
-        
         try {
-            const valueToken = await localforage.removeItem("authToken");
-            this.setState({token: ""});
+            await localforage.removeItem("authToken");
+            this.disableLogin();
         }
         catch (error) {
-            this.setState({token: ""});
-            this.setState({errorToken: "You logged out"});
+            this.disableLogin();
         }
         
     }

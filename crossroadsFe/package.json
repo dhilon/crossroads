@@ -23,7 +23,6 @@
     "react-router-dom": "^6.3.0",
     "react-scripts": "^5.0.1",
     "react-swipeable-views": "^0.14.0",
-    "react-token-auth": "^2.3.8",
     "react-window": "^1.8.7",
     "web-vitals": "^2.1.4"
   },
