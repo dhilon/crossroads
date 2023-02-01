@@ -14,7 +14,7 @@ class ProfileDialog extends React.Component {
     }
 
     handleProfileResponse(response) {
-      this.setState({profile: response.data[0]});
+      this.setState({profile: response.data});
     }
 
     componentDidMount(){
