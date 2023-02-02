@@ -1,55 +1,43 @@
-import { Dialog, DialogTitle, Button } from "@mui/material";
-import PropTypes from 'prop-types';
-import React, { useState, useEffect, Suspense } from "react";
-import axios from "axios";
-import { setDate } from "date-fns";
+import { Dialog, DialogTitle, Button, Alert } from "@mui/material";
+import React from "react";
 import { CircularProgress } from "@mui/material";
+import useSWR from 'swr';
 
 
-class ProfileDialog extends React.Component {
-    constructor(props) {
-      super(props);
-      this.state = {profile: null};
-      this.handleProfileResponse = this.handleProfileResponse.bind(this)
-    }
+function ProfileDialog (props) {
+  const { data: profile, error, isLoading } = useSWR('/profile');
 
-    handleProfileResponse(response) {
-      this.setState({profile: response.data});
-    }
 
-    componentDidMount(){
-      axios.get("/profile").then(this.handleProfileResponse);
-    }
-    
-
-    render() {
-      if (!this.state.profile) {
-        return (<CircularProgress color="secondary" />);
-      }
-      
-      return (
-          <div>
-            <Dialog onClose={this.props.onClose} open={this.props.open}>
-              <DialogTitle>All About YOU</DialogTitle>
-              Codename: {this.state.profile.user.username}
-              <br></br>
-              Created: {this.state.profile.created}
-              <br></br>
-              Hours Played: {this.state.profile.hoursPlayed}
-              <br></br>
-              Hours Won: {this.state.profile.hoursWon}
-              <br></br>
-              Highest Streak Rank: {this.state.profile.highestStreakRank}
-              <br></br>
-              Highest Streak: {this.state.profile.highestStreak}
-              <Button id = "logout" variant = "contained" label = "Log Out" onClick = {this.props.onLogOut}>Log Out</Button>
-            </Dialog>
-          </div>
-      )
-      
-      
-      
-    };
+  if (isLoading) {
+    return (<CircularProgress color="secondary" />);
   }
+
+  if (error) {
+    return (<Alert severity="error">There is an error {error}</Alert>)
+  }
+      
+  return (
+    <div>
+      <Dialog onClose={props.onClose} open={props.open}>
+        <DialogTitle>All About YOU</DialogTitle>
+        Codename: {profile.user.username}
+        <br></br>
+        Created: {profile.created}
+        <br></br>
+        Hours Played: {profile.hoursPlayed}
+        <br></br>
+        Hours Won: {profile.hoursWon}
+        <br></br>
+        Highest Streak Rank: {profile.highestStreakRank}
+        <br></br>
+        Highest Streak: {profile.highestStreak}
+        <Button id="logout" variant="contained" label="Log Out" onClick={props.onLogOut}>Log Out</Button>
+      </Dialog>
+    </div>
+  )
+      
+      
+      
+};
 
 export default ProfileDialog

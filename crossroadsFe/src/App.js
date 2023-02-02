@@ -3,6 +3,7 @@ import LoggedInApp from "./LoggedInApp";
 import LoggedOutApp from "./LoggedOutApp";
 import localforage from "localforage";
 import { CircularProgress } from "@mui/material";
+import { SWRConfig } from 'swr'
 import axios from "axios";
 
 axios.defaults.baseURL = "http://localhost:8000";
@@ -77,8 +78,12 @@ class App extends React.Component {
             return(<CircularProgress color="secondary" />);
         }
         else if (this.state.token !== "") {
-            return (<LoggedInApp handleLogOut = {this.handleLogOut}/>);
-        } else {
+            return (<SWRConfig value={{
+                fetcher: url => axios.get(url).then(res => res.data) 
+            }}>
+                <LoggedInApp handleLogOut = {this.handleLogOut}/>
+            </SWRConfig>);        
+            } else {
             return (<LoggedOutApp handleLogIn = {this.handleLogIn} errorToken = {this.state.errorToken}/>);
         }
     }
