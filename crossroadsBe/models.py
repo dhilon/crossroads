@@ -61,6 +61,8 @@ class StoreItem(models.Model):
     )
     
     createdAt = models.DateTimeField(auto_now_add=True)
+    description = models.TextField(max_length=300, default = 'a random device')
+    img = models.URLField(max_length=999, default= 'https://images.unsplash.com/photo-1538032746644-0212e812a9e7?auto=format&fit=crop&w=400&h=250&q=60')
     
 
 class InventoryStoreItem(models.Model):

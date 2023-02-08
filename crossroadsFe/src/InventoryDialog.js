@@ -1,79 +1,76 @@
 import * as React from "react";
+import { useState } from 'react';
 import {
     Button,
     Card, 
     CardActions, 
     CardContent, 
-    Typography 
+    Typography,
+    CircularProgress,
+    Paper,
+    Box
 } from '@mui/material';
 
-class InventoryCard extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      disabled: false,
-      items: [],
-      error: null
-    };
-  }
+function InventoryCard (props) {
 
-  handleClose() {
+  const [disabled, setDisabled] = useState(false);
+
+  function handleClose() {
     this.setState({disabled: true});
     this.props.onClose();
   }
 
-  componentDidMount() {
-    fetch("http://localhost:3000/inventoryStoreItems")
-      .then(res => res.json())
-      .then(
-        (result) => {
-          this.setState({items: result});
-        },
-        (error) => {
-          this.setState({error});
-        }
-      )
-  }
+  
+  return (
+    <div>
+      
+      <Box
+          component="img"
+          sx={{
+              height: 255,
+              display: 'block',
+              maxWidth: 400,
+              overflow: 'hidden',
+              width: '100%',
+          }}
+          src={props.item.storeItem.img}
+          alt={props.item.storeItem.name}
+      />
+      <Card variant="outlined">
+        <React.Fragment>
+            <CardContent>
 
-  render () {
-    const { items } = this.state;
-    return (
-      <div>
-        {items.map(value => (
-        <Card variant="outlined">
-          <React.Fragment>
-              <CardContent>
-                <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                  {value.storeItem.id}
-                </Typography>
-                <Typography variant="h5" component="div">
-                  {value.storeItem.name}
-                </Typography>
-                <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                  Strength: {value.storeItem.powerLevel}
-                </Typography>
-                <Typography variant="body2">
-                  A great ploy to ...
-                  <br />
-                  {'"..."'}
-                  Cost: {value.storeItem.pointsCost}
-                  Created: {value.storeItem.createdAt}
-                </Typography>
-              </CardContent>
-            <CardActions>
-              <Button size="small" onClick = {this.handleClose.bind(this)} disabled = {this.state.disabled}>
-                Use
-              </Button>
-            </CardActions>
-          </React.Fragment>
-        </Card>
-        )
-      )}
-      </div>
-      
-      
-    )
-  };
-}
+              <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                Store Item: {props.item.storeItem.id}
+              </Typography>
+              <Typography variant="h5" component="div">
+                {props.item.storeItem.name}
+              </Typography>
+              <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                Strength: {props.item.storeItem.powerLevel}
+              </Typography>
+              
+              <Typography variant="body2">
+                {props.item.storeItem.description}
+                <hr />
+                Cost: {props.item.storeItem.pointsCost}
+                <br />
+                Created: {props.item.storeItem.createdAt}
+                <br />
+                Bought At: {props.item.boughtAt}
+              </Typography>
+            </CardContent>
+          <CardActions>
+            <Button size="small" onClick = {handleClose} disabled = {disabled}>
+              Use
+            </Button>
+          </CardActions>
+        </React.Fragment>
+      </Card>
+    </div>
+    
+    
+  )
+};
 
 export default InventoryCard;

@@ -26,7 +26,7 @@ class StoreItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = StoreItem
         fields = '__all__'
-        read_only_fields = ['id', 'pointsCost', 'name', 'powerLevel', 'createdAt']
+        read_only_fields = ['id', 'pointsCost', 'name', 'powerLevel', 'createdAt', 'description', 'img']
     
 
 class InventoryStoreItemSerializer(serializers.ModelSerializer):
