@@ -19,13 +19,15 @@ def calendar(request):
     output = ', '.join([q.created.__str__() for q in latest_question_list])
     return HttpResponse("All quizzes: " + output)
 
-class FactList(generics.ListAPIView):
+class FactDetail(generics.RetrieveAPIView):
     queryset = Fact.objects.all()
     serializer_class = FactSerializer
-
-class FactDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Fact.objects.all()
-    serializer_class = FactSerializer
+    
+    def get_object(self):
+        objs = Fact.objects.order_by('?')
+        if len(objs) == 0:
+            return Fact(title = "This is a bug.")
+        return objs[0]
 
 class ProfileDetail(generics.RetrieveAPIView):
     serializer_class = ProfileSerializer

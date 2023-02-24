@@ -20,7 +20,9 @@ function InventoryCard (props) {
     this.props.onClose();
   }
 
-  
+  const createdAtDate = new Date(props.item.storeItem.createdAt).toLocaleString("en-US")
+  const boughtAtDate = new Date(props.item.boughtAt).toLocaleString("en-US")
+
   return (
     <div>
       
@@ -55,9 +57,9 @@ function InventoryCard (props) {
                 <hr />
                 Cost: {props.item.storeItem.pointsCost}
                 <br />
-                Created: {props.item.storeItem.createdAt}
+                Created: {createdAtDate}
                 <br />
-                Bought At: {props.item.boughtAt}
+                Bought At: {boughtAtDate}
               </Typography>
             </CardContent>
           <CardActions>
