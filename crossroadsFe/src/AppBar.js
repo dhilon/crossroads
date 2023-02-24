@@ -91,7 +91,7 @@ function ResponsiveAppBar(props){
                 <IconButton onClick={props.profileClickOpen} sx={{ p: 0 }}
                 id="profile-button"
                 >
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                  <Avatar alt={props.profile.user.username} src="/static/images/avatar/2.jpg" />
                   <ProfileDialog open = {props.profileOpen} onClose = {props.profileClose} onLogOut = {props.handleLogOut}/>
                 </IconButton>
               </Tooltip>

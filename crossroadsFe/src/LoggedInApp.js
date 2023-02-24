@@ -185,6 +185,7 @@ function LoggedInApp(props) {
           aboutUsClose={() => {handleOpenClose('aboutUsOpen')}}
           aboutUsClickOpen={() => {handleOpenClose('aboutUsOpen')}}
           handleLogOut={props.handleLogOut}
+          profile = {profile}
         />
       </Grid>
 

@@ -79,18 +79,22 @@ class Play(models.Model):
     quiz = models.ForeignKey(Quiz, related_name='plays', on_delete=models.CASCADE)
 
     choices = [
-        ('Right', 'Right'),
-        ('Left', 'Left')
+        ('Right', 'Left'),
+        ('Left', 'Right')
     ]
     choice = models.CharField(max_length=5, choices=choices, default='Left')
     
     def clean(self):
         if (self.quiz.ended is not None):
-            raise ValidationError({'myQuiz': 'The quiz has ended and can no longer be voted'})
+            raise ValidationError({'quizEnded': 'The quiz has ended and can no longer be voted'})
+        checkPlay = list(Play.objects.filter(quiz=self.quiz, player=self.player))
+        if (len(checkPlay)!=0):
+            raise ValidationError({'alreadyPlayed': 'This quiz has already been played by this player.'})
 
     def save(self, *args, **kwargs):
         self.clean()
         super().save(*args, **kwargs)
+        
 
 
 class Feedback(models.Model):
