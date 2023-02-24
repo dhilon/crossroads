@@ -6,8 +6,6 @@ import {
     CardActions, 
     CardContent, 
     Typography,
-    CircularProgress,
-    Paper,
     Box
 } from '@mui/material';
 

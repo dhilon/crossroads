@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from crossroadsBe.serializer import *
 from rest_framework import generics
+import random
 
 # Create your views here.
 
@@ -51,8 +52,13 @@ class PointsLeaderboard(generics.ListAPIView):
     
 
 class StoreItemList(generics.ListAPIView):
-    queryset = StoreItem.objects.all()
     serializer_class = StoreItemSerializer
+    
+    def get_queryset(self):
+        objs = StoreItem.objects.order_by("?")
+        return objs[:3]
+
+
 
 class StoreItemDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = StoreItem.objects.all()
