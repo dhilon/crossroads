@@ -35,10 +35,10 @@ function LoggedInApp(props) {
     leadMenu: false,
     calendarOpen: false,
     inventoryOpen: false,
-    voteOpen: false,
+    right: false,
     profileOpen: false,
     storeOpen: false,
-    leftright: false,
+    left: false,
     feedbackOpen: false,
     aboutUsOpen: false,
   });
@@ -47,11 +47,18 @@ function LoggedInApp(props) {
   function handleOpenClose(stateVar) {
     var newState = Object.assign({}, state);
     newState[stateVar] = !state[stateVar];
-    if (stateVar === 'voteOpen') {
-      if (state.leftright === true) {
+    if (stateVar === 'right') {
         setState(newState)
+        if (state.left) {
+          handleOpenClose('left')
+        }
       }
-    }
+    else if (stateVar === 'left') {
+        setState(newState)
+        if (state.right) {
+          handleOpenClose('right')
+        }
+      }
     else {
       setState(newState);
     }
@@ -113,7 +120,7 @@ function LoggedInApp(props) {
 
 
         <Grid item xs={3}>
-          <Button disabled={state.leftright} onClick={() => {handleOpenClose('leftright')}}>
+          <Button variant="contained" disabled={state.left} onClick={() => {handleOpenClose('left')}}>
             Left
           </Button>
         </Grid>
@@ -123,16 +130,14 @@ function LoggedInApp(props) {
         </Grid>
 
         <Grid item xs={3}>
-          <Button disabled={state.leftright && state.voteOpen} onClick={() => {handleOpenClose('leftright')}}>
+          <Button variant = "contained" disabled={state.right} onClick={() => {handleOpenClose('right')}}>
             Right
           </Button>
         </Grid>
 
 
         <Grid item xs={12}>
-          <Button variant="contained" disabled={state.voteOpen && state.leftright} onClick={() => {handleOpenClose('voteOpen')}}>
-            Vote
-          </Button>
+          
         </Grid>
 
         <Grid item xs={4}>
