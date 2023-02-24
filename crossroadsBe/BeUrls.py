@@ -18,4 +18,6 @@ urlpatterns = [
     path('quizzes/<int:pk>/', views.QuizDetail.as_view()),
     path('quizzes/<int:pk>/plays', views.PlayList.as_view()),
     path('quizzes/<int:pk>/plays/<int:pk2>/', views.PlayDetail.as_view()),
+    path('streakLeaderboard/', views.StreakLeaderboard.as_view()),
+    path('pointsLeaderboard/', views.PointsLeaderboard.as_view()),
 ]

@@ -1,15 +1,7 @@
 import * as React from "react";
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import { Leaderboard, BatteryCharging90Outlined, CardMembershipOutlined, Filter1, Filter2, Filter3 } from "@mui/icons-material";
-import Divider from '@mui/material/Divider'
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import List from '@mui/material/List';
-import ListItemButton from '@mui/material/ListItemButton';
-
+import { Leaderboard, BatteryCharging90Outlined, CardMembershipOutlined } from "@mui/icons-material";
+import { Divider, Menu, MenuItem, Dialog, DialogTitle, List, ListItemButton, CircularProgress, Alert, Typography, Button } from '@mui/material'
+import useSWR from 'swr';
 
 
 function WhichLeaderboard(props) {
@@ -17,12 +9,15 @@ function WhichLeaderboard(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const { leadClickOpen } = props;
+  
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  
 
   return (
     <div>
@@ -40,7 +35,7 @@ function WhichLeaderboard(props) {
         onClose={handleClose}
       >
         <MenuItem onClick={leadClickOpen}>
-          <TopStreaksMenu /> 
+          <TopStreaksMenu />
         </MenuItem>
         <MenuItem onClick={leadClickOpen}>
           <MostPointsMenu />
@@ -54,12 +49,22 @@ function TopStreaksMenu(props) {
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  
+  const { data: streak, error, isLoading } = useSWR('/streakLeaderboard');
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  if (isLoading) {
+    return (<CircularProgress color="secondary" />);
+  }
+
+  if (error) {
+    return (<Alert severity="error">There is an error {error}</Alert>)
+  }
 
   return (
     <div>
@@ -79,9 +84,9 @@ function TopStreaksMenu(props) {
           open={open}
           onClose={handleClose}
         >
-          <ListItemButton> <Filter1/> st place: ...</ListItemButton>
-          <ListItemButton> <Filter2/> nd place: ...</ListItemButton>
-          <ListItemButton> <Filter3/> rd place: ...</ListItemButton>
+          {streak.map(function(profile, i) {
+            return <ListItemButton> Place #{i+1}: {profile.user.username}: {profile.streak}</ListItemButton>;
+          })}
           <Divider sx={{ my: 0.5 }} />
           <ListItemButton>Your place: ...</ListItemButton>
         </List>
@@ -92,15 +97,24 @@ function TopStreaksMenu(props) {
 }
 
 function MostPointsMenu(props) {
-
+  const { data: points, error, isLoading } = useSWR('/pointsLeaderboard');
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  if (isLoading) {
+    return (<CircularProgress color="secondary" />);
+  }
+
+  if (error) {
+    return (<Alert severity="error">There is an error {error}</Alert>)
+  }
 
   return (
     <div>
@@ -121,9 +135,10 @@ function MostPointsMenu(props) {
           open={open}
           onClose={handleClose}
         >
-          <ListItemButton> <Filter1/> st place: ...</ListItemButton>
-          <ListItemButton> <Filter2/> nd place: ...</ListItemButton>
-          <ListItemButton> <Filter3/> rd place: ...</ListItemButton>
+          {points.map(function(profile, i) {
+            return <ListItemButton> Place #{i+1}: {profile.user.username}: {profile.points}</ListItemButton>;
+          })}
+          
           <Divider sx={{ my: 0.5 }} />
           <ListItemButton>Your place: ...</ListItemButton>
         </List>

@@ -3,8 +3,6 @@ from pygments.lexers import get_all_lexers
 from pygments.styles import get_all_styles
 import django.contrib.auth
 from django.contrib.auth.models import User
-from django.utils import timezone
-import pytz
 from django.core.exceptions import ValidationError
 from django.dispatch import receiver
 from django.db.models.signals import post_save
@@ -24,7 +22,6 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, related_name='profile', on_delete=models.CASCADE, primary_key=True)
-
     created = models.DateTimeField(auto_now_add=True)
     streak = models.IntegerField(default = 0)
     points = models.IntegerField(default = 0)
@@ -104,5 +101,3 @@ class Feedback(models.Model):
 class Fact(models.Model):
     title = models.TextField(max_length=200)
 
-
-    

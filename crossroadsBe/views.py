@@ -36,6 +36,18 @@ class ProfileDetail(generics.RetrieveAPIView):
     def get_object(self):
         obj = Profile.objects.get(user=self.request.user)
         return obj
+
+
+class StreakLeaderboard(generics.ListAPIView):
+    serializer_class = ProfileSerializer
+    def get_queryset(self):
+        return Profile.objects.order_by('-streak')[:3]
+    
+    
+class PointsLeaderboard(generics.ListAPIView):
+    serializer_class = ProfileSerializer
+    def get_queryset(self):
+        return Profile.objects.order_by('-points')[:3]
     
 
 class StoreItemList(generics.ListAPIView):

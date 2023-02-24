@@ -169,7 +169,7 @@ function LoggedInApp(props) {
 
       <Grid item xs={12} fontSize="large">
           <Typography variant="h2" sx={{ padding: 1 }}>
-            Welcome to  C rossroads!
+            Welcome to  Crossroads!
           </Typography>
       </Grid>
 
