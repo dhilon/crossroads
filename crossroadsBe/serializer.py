@@ -59,12 +59,12 @@ class PlaySerializer(serializers.ModelSerializer):
         return Play.objects.update(**validated_data)
 
 class QuizSerializer(serializers.ModelSerializer):
-    plays = PlaySerializer(many=True, read_only=True)
+    leftPlayCount = serializers.IntegerField()
 
     class Meta:
         model = Quiz
-        fields = ['id', 'created', 'rightWord', 'leftWord', 'ended', 'plays']
-        read_only_fields = ['id', 'created', 'rightWord', 'leftWord', 'ended', 'plays']
+        fields = ['id', 'created', 'rightWord', 'leftWord', 'ended', 'leftPlayCount', 'rightPlayCount']
+        read_only_fields = ['id', 'created', 'rightWord', 'leftWord', 'ended', 'leftPlayCount', 'rightPlayCount']
 
 class FeedbackSerializer(serializers.ModelSerializer):
     class Meta:

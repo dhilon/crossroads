@@ -1,48 +1,70 @@
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import * as React from "react";
-import TextField from '@mui/material/TextField';
+import {TextField, CircularProgress, Alert } from '@mui/material';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import PropTypes from 'prop-types';
-import { PieChart, Series } from 'devextreme-react/pie-chart';
+import { PieChart, Series, Label, Connector } from 'devextreme-react/pie-chart';
+import useSWR from 'swr';
 
-const data = [{
-  arg: 'Right',
-  val: 60
-}, {
-  arg: 'Left',
-  val: 40
+function toDateString(date) {
+    var month = date.getMonth() + 1;
+    var day = date.getDate();
+    return month + "-" + day + "-" + date.getUTCFullYear();
 }
-];
-
 
 function CalendarDialog(props) {
-    const [value, setValue] = React.useState(new Date());
+
+    const [date, setDate] = React.useState(new Date());
+    const { data: quiz, error, isLoading } = useSWR('/quizzes/'+toDateString(date)+"/");
     const { onClose, open } = props;
+
+    if (isLoading) {
+      return (<CircularProgress color="secondary" />);
+    }
   
+    if (error) {
+      return (<Alert severity="error">There is an error {error}</Alert>)
+    } 
+
+    const data = [
+      {
+        name: quiz.leftWord,
+        val: quiz.leftPlayCount
+      },
+      {
+        name: quiz.rightWord,
+        val: quiz.rightPlayCount
+      }
+    ];
+
     return (
       <Dialog onClose={onClose} open={open}>
-        <DialogTitle> </DialogTitle>
+        <DialogTitle>Quick Calendar</DialogTitle>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <DateTimePicker
+          <DatePicker
             renderInput={(props) => <TextField {...props} />}
             label="Ultimate Calendar of Votes"
-            value={value}
+            value={date}
             onChange={(newValue) => {
-              setValue(newValue);
+              setDate(newValue);
             }}
           />
         </LocalizationProvider>
         <PieChart
           type = 'doughnut'
           dataSource={data}
+          title = "Vote Counts"
         >
           <Series 
-              argumentField="arg" 
+              argumentField="name" 
               valueField="val"
           >
+            <Label visible={true}>
+              <Connector visibile={true} width={1} />
+            </Label>
           </Series>
         </PieChart>
         

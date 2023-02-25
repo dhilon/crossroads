@@ -96,13 +96,15 @@ class InventoryStoreItemDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = InventoryStoreItemSerializer
 
 
-class QuizList(generics.ListAPIView):
-    queryset = Quiz.objects.all()
-    serializer_class = QuizSerializer
-
 class QuizDetail(generics.RetrieveAPIView):
     queryset = Quiz.objects.all()
     serializer_class = QuizSerializer
+
+    def get_object(self):
+        date = self.kwargs['date']
+        return Quiz.objects.filter(created__year = date.year,
+                            created__month = date.month,
+                            created__day = date.day).first()
 
 class FeedbackList(generics.ListAPIView):
     queryset = Feedback.objects.all()

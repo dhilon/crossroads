@@ -73,6 +73,12 @@ class Quiz(models.Model):
     rightWord = models.CharField(max_length=32, default = "right")
     leftWord = models.CharField(max_length=32, default = "left")
 
+    def leftPlayCount(self):
+        return Play.objects.filter(quiz = self, choice='Left').count()
+    
+    def rightPlayCount(self):
+        return Play.objects.filter(quiz = self, choice='Right').count()
+
 class Play(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     player = models.ForeignKey(User, related_name='plays', on_delete=models.CASCADE)

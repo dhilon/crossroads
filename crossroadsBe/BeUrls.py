@@ -1,6 +1,9 @@
-from django.urls import include, path
+from django.urls import include, path, register_converter
 from django.contrib import admin
 from . import views
+from crossroadsBe.converters import DateConverter
+
+register_converter(DateConverter, 'date')
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -14,8 +17,7 @@ urlpatterns = [
     path('storeItems/<int:pk>/', views.StoreItemDetail.as_view()),
     path('inventoryStoreItems/', views.InventoryStoreItemList.as_view()),
     path('inventoryStoreItems/<int:pk>/', views.InventoryStoreItemDetail.as_view()),
-    path('quizzes/', views.QuizList.as_view()),
-    path('quizzes/<int:pk>/', views.QuizDetail.as_view()),
+    path('quizzes/<date:date>/', views.QuizDetail.as_view()),
     path('quizzes/<int:pk>/plays', views.PlayList.as_view()),
     path('quizzes/<int:pk>/plays/<int:pk2>/', views.PlayDetail.as_view()),
     path('streakLeaderboard/', views.StreakLeaderboard.as_view()),
