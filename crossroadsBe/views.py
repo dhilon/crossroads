@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from crossroadsBe.serializer import *
 from rest_framework import generics
+from datetime import datetime
 import random
 
 # Create your views here.
@@ -14,6 +15,14 @@ def index(request):
 
 def vote(request, question_id):
     return HttpResponse("You're voting on quiz %s." % question_id)
+
+def getDate(kwargs):
+    if 'date' not in kwargs:
+        date = datetime.now()
+    else:
+        date = kwargs['date']
+    return date
+
 
 def calendar(request):
     latest_question_list = Play.objects.order_by('created')[:5]
@@ -68,11 +77,12 @@ class PlayList(generics.ListCreateAPIView):
     serializer_class = PlaySerializer
     
     def get_queryset(self):
-        return Play.objects.filter(quiz=self.kwargs[self.lookup_field])
+        quiz = Quiz.getFromDate(getDate(self.kwargs));
+        return Play.objects.filter(quiz = quiz, player=self.request.user)
 
     def perform_create(self, serializer):
         serializer.save(
-            quiz=Quiz.objects.get(pk=self.kwargs[self.lookup_field]),
+            quiz=Quiz.getFromDate(getDate(self.kwargs)),
             player=self.request.user
             )
 
@@ -80,7 +90,8 @@ class PlayDetail(generics.RetrieveUpdateAPIView):
     serializer_class = PlaySerializer
 
     def get_queryset(self):
-        return Play.objects.filter(pk=self.kwargs['pk2'])
+        quiz = Quiz.getFromDate(getDate(self.kwargs));
+        return Play.objects.filter(quiz = quiz, player=self.request.user)
 
     def get_object(self):
         return Play.objects.get(pk=self.kwargs['pk2']) 
@@ -100,11 +111,14 @@ class QuizDetail(generics.RetrieveAPIView):
     queryset = Quiz.objects.all()
     serializer_class = QuizSerializer
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['user'] = self.request.user
+        return context
+
     def get_object(self):
-        date = self.kwargs['date']
-        return Quiz.objects.filter(created__year = date.year,
-                            created__month = date.month,
-                            created__day = date.day).first()
+        date = getDate(self.kwargs)
+        return Quiz.getFromDate(date);
 
 class FeedbackList(generics.ListAPIView):
     queryset = Feedback.objects.all()

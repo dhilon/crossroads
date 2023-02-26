@@ -59,12 +59,16 @@ class PlaySerializer(serializers.ModelSerializer):
         return Play.objects.update(**validated_data)
 
 class QuizSerializer(serializers.ModelSerializer):
-    leftPlayCount = serializers.IntegerField()
+    plays = serializers.SerializerMethodField("get_plays")
+    def get_plays(self, obj):
+        plays = Play.objects.filter(quiz = obj, player=self.context['user'])
+        plays = PlaySerializer(plays, many=True)
+        return plays.data
 
     class Meta:
         model = Quiz
-        fields = ['id', 'created', 'rightWord', 'leftWord', 'ended', 'leftPlayCount', 'rightPlayCount']
-        read_only_fields = ['id', 'created', 'rightWord', 'leftWord', 'ended', 'leftPlayCount', 'rightPlayCount']
+        fields = ['id', 'created', 'rightWord', 'leftWord', 'ended', 'leftPlayCount', 'rightPlayCount', 'plays']
+        read_only_fields = ['id', 'created', 'rightWord', 'leftWord', 'ended', 'leftPlayCount', 'rightPlayCount', 'plays']
 
 class FeedbackSerializer(serializers.ModelSerializer):
     class Meta:

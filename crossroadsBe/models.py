@@ -79,6 +79,12 @@ class Quiz(models.Model):
     def rightPlayCount(self):
         return Play.objects.filter(quiz = self, choice='Right').count()
 
+    def getFromDate(date):
+        return Quiz.objects.filter(created__year = date.year,
+                            created__month = date.month,
+                            created__day = date.day).first();
+
+
 class Play(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     player = models.ForeignKey(User, related_name='plays', on_delete=models.CASCADE)
@@ -96,6 +102,7 @@ class Play(models.Model):
         checkPlay = list(Play.objects.filter(quiz=self.quiz, player=self.player))
         if (len(checkPlay)!=0):
             raise ValidationError({'alreadyPlayed': 'This quiz has already been played by this player.'})
+
 
     def save(self, *args, **kwargs):
         self.clean()
