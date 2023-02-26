@@ -51,7 +51,6 @@ function StoreCard(props) {
               
               <Typography variant="body2">
                 {props.item.description}
-                <hr />
                 Cost: {props.item.pointsCost}
                 <br />
                 Created: {createdAtDate}

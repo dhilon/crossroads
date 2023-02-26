@@ -120,10 +120,10 @@ class QuizDetail(generics.RetrieveAPIView):
         date = getDate(self.kwargs)
         return Quiz.getFromDate(date);
 
-class FeedbackList(generics.ListAPIView):
-    queryset = Feedback.objects.all()
-    serializer_class = FeedbackSerializer
-
-class FeedbackDetail(generics.RetrieveUpdateDestroyAPIView):
+class FeedbackList(generics.ListCreateAPIView):
+    def perform_create(self, serializer):
+        serializer.save(
+            author=self.request.user
+            )
     queryset = Feedback.objects.all()
     serializer_class = FeedbackSerializer

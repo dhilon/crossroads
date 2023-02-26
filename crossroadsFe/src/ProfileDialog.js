@@ -21,7 +21,7 @@ function ProfileDialog (props) {
         <DialogTitle>All About YOU</DialogTitle>
         Codename: {profile.user.username}
         <br></br>
-        Created: {profile.created}
+        Created: {new Date(profile.created).toLocaleString("en-US")}
         <br></br>
         Hours Played: {profile.hoursPlayed}
         <br></br>

@@ -1,15 +1,34 @@
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import * as React from "react";
-import {Typography } from '@mui/material';
+import {StepContext, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button'
 import SendIcon from '@mui/icons-material/Send';
+import axios from "axios"
+import { useState } from 'react';
 
 
 function FeedbackDialog(props) {
     const { onClose, open} = props;
+
+    const [text, setText] = useState('');
+
+    async function handleClose () {
+      try {
+        await axios.post('/feedbacks/', {text:text});
+        setText('');
+        onClose();
+      }
+      catch (error) {
+        onClose();
+      }
+    }
+
+    function handleTextChange (event) {
+      setText(event.target.value);
+    }
   
     return (
       <Dialog onClose={onClose} open={open}>
@@ -17,8 +36,8 @@ function FeedbackDialog(props) {
         <Typography variant = "body1" sx = {{padding: 1}}>
           All feedback is good feedback! 
         </Typography>
-        <TextField name = "feedbackText" id="outlined-basic" label="Enter feedback here: 😁" variant="outlined" />
-        <Button variant="contained" endIcon={<SendIcon />} onClick = {onClose} > Send </Button>
+        <TextField name = "feedbackText" id="outlined-basic" label="Enter feedback here: 😁" variant="outlined" value = {text} onChange = {handleTextChange}/>
+        <Button variant="contained" endIcon={<SendIcon />} onClick = {handleClose} > Send </Button>
       </Dialog>
     );
   }

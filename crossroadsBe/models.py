@@ -69,7 +69,6 @@ class InventoryStoreItem(models.Model):
         
 class Quiz(models.Model):
     created = models.DateTimeField(auto_now_add=True)
-    ended = models.DateTimeField(null=True, blank=True)
     rightWord = models.CharField(max_length=32, default = "right")
     leftWord = models.CharField(max_length=32, default = "left")
 
@@ -97,10 +96,8 @@ class Play(models.Model):
     choice = models.CharField(max_length=5, choices=choices, default='Left')
     
     def clean(self):
-        if (self.quiz.ended is not None):
-            raise ValidationError({'quizEnded': 'The quiz has ended and can no longer be voted'})
         checkPlay = list(Play.objects.filter(quiz=self.quiz, player=self.player))
-        if (len(checkPlay)!=0):
+        if (self.id is None and len(checkPlay)!=0):
             raise ValidationError({'alreadyPlayed': 'This quiz has already been played by this player.'})
 
 

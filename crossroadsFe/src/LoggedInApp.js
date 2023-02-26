@@ -15,15 +15,18 @@ import '@fontsource/roboto/700.css';
 import { Button, Typography, Alert, CircularProgress } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import * as React from "react";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import useSWR from 'swr';
 import IconButton from '@mui/material/IconButton';
 import { CalendarToday, Inventory, ShoppingCart } from '@mui/icons-material';
+import axios from 'axios';
 
 
 
 function LoggedInApp(props) {
-  const { data: profile, error, isLoading } = useSWR('/profile');
+  const { data: profile, error, isLoading } = useSWR('/profile/');
+  const { data: quiz, error: quizError, isLoading: isQuizLoading, mutate} = useSWR('/quizzes/');
+  const [buttonState, setButtonState] = useState('None');
 
   
   const [state, setState] = useState({
@@ -35,42 +38,64 @@ function LoggedInApp(props) {
     leadMenu: false,
     calendarOpen: false,
     inventoryOpen: false,
-    right: false,
     profileOpen: false,
     storeOpen: false,
-    left: false,
     feedbackOpen: false,
     aboutUsOpen: false,
   });
 
-
-  function handleOpenClose(stateVar) {
-    var newState = Object.assign({}, state);
-    newState[stateVar] = !state[stateVar];
-    if (stateVar === 'right') {
-        setState(newState)
-        if (state.left) {
-          handleOpenClose('left')
-        }
+  async function handleVote(stateVar) {
+    if (buttonState == 'None') {
+      try {
+        const response = await axios.post('/quizzes/plays/', {choice: stateVar});
+        mutate();
       }
-    else if (stateVar === 'left') {
-        setState(newState)
-        if (state.right) {
-          handleOpenClose('right')
-        }
+      catch (error) {
+        //do it again
       }
-    else {
-      setState(newState);
     }
+
+    else {
+      try {
+        const response = await axios.put('/quizzes/plays/' + quiz.plays[0].id + "/", {choice: stateVar});
+        mutate();
+      }
+      catch (error) {
+        //do it again
+      }
+    }
+
   }
 
-  if (isLoading) {
+  useEffect(() => {
+    if (!isQuizLoading) {
+      if (quiz.plays.length > 0) {
+        setButtonState(quiz.plays[0].choice);
+      }
+    }
+  })
+
+
+  async function handleOpenClose(stateVar) {
+    var newState = Object.assign({}, state);
+    newState[stateVar] = !state[stateVar];
+    setState(newState);
+  }
+
+  if (isLoading || isQuizLoading) {
     return (<CircularProgress color="secondary" />);
   }
 
-  if (error) {
-    return (<Alert severity="error">There is an error {error}</Alert>)
+  if (error || quizError) {
+    if (!error) {
+      error = quizError;
+    }
+    return (<Alert severity="error">There is an error {error}</Alert>);
   }
+
+  
+  
+
 
   return (
     <div className="App">
@@ -120,8 +145,8 @@ function LoggedInApp(props) {
 
 
         <Grid item xs={3}>
-          <Button variant="contained" disabled={state.left} onClick={() => {handleOpenClose('left')}}>
-            Left
+          <Button variant="contained" disabled={buttonState == 'Left'} onClick={() => {handleVote('Left')}}>
+            {quiz.leftWord}
           </Button>
         </Grid>
 
@@ -130,8 +155,8 @@ function LoggedInApp(props) {
         </Grid>
 
         <Grid item xs={3}>
-          <Button variant = "contained" disabled={state.right} onClick={() => {handleOpenClose('right')}}>
-            Right
+          <Button variant = "contained" disabled={buttonState == 'Right'} onClick={() => {handleVote('Right')}}>
+            {quiz.rightWord}
           </Button>
         </Grid>
 

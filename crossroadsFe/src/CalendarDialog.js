@@ -29,16 +29,22 @@ function CalendarDialog(props) {
       return (<Alert severity="error">There is an error {error}</Alert>)
     } 
 
-    const data = [
-      {
-        name: quiz.leftWord,
-        val: quiz.leftPlayCount
-      },
-      {
-        name: quiz.rightWord,
-        val: quiz.rightPlayCount
-      }
-    ];
+    const today = new Date();
+    const quizDate = new Date(Date.parse(quiz.created));
+    let data = [];
+    if (quizDate.getDate() != today.getDate() && quizDate.getMonth() != today.getMonth() && quizDate.getUTCFullYear() != today.getUTCFullYear()) {
+      data = [
+        {
+          name: quiz.leftWord,
+          val: quiz.leftPlayCount
+        },
+        {
+          name: quiz.rightWord,
+          val: quiz.rightPlayCount
+        }
+      ];
+    }
+    
 
     return (
       <Dialog onClose={onClose} open={open}>

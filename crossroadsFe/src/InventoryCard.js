@@ -52,7 +52,6 @@ function InventoryCard (props) {
               
               <Typography variant="body2">
                 {props.item.storeItem.description}
-                <hr />
                 Cost: {props.item.storeItem.pointsCost}
                 <br />
                 Created: {createdAtDate}
