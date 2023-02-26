@@ -47,7 +47,7 @@ function LoggedInApp(props) {
   async function handleVote(stateVar) {
     if (buttonState == 'None') {
       try {
-        const response = await axios.post('/quizzes/plays/', {choice: stateVar});
+        await axios.post('/quizzes/plays/', {choice: stateVar});
         mutate();
       }
       catch (error) {
@@ -57,7 +57,7 @@ function LoggedInApp(props) {
 
     else {
       try {
-        const response = await axios.put('/quizzes/plays/' + quiz.plays[0].id + "/", {choice: stateVar});
+        await axios.put('/quizzes/plays/' + quiz.plays[0].id + "/", {choice: stateVar});
         mutate();
       }
       catch (error) {
@@ -68,7 +68,7 @@ function LoggedInApp(props) {
   }
 
   useEffect(() => {
-    if (!isQuizLoading) {
+    if (!isQuizLoading && quiz.plays) {
       if (quiz.plays.length > 0) {
         setButtonState(quiz.plays[0].choice);
       }
