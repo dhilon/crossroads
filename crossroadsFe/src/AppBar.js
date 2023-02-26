@@ -10,7 +10,7 @@ import AboutUsCarousel from "./AboutUsCarousel.js";
 
 
 function ResponsiveAppBar(props){
-  const { feedbackOpen, feedbackClose, feedbackClickOpen, aboutUsOpen, aboutUsClose, aboutUsClickOpen, handleLogOut } = props;
+  const { feedbackOpen, feedbackClose, feedbackClickOpen, aboutUsOpen, aboutUsClose, aboutUsClickOpen} = props;
 
   return (
     <div>

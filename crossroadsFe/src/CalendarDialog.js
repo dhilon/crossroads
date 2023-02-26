@@ -32,7 +32,7 @@ function CalendarDialog(props) {
     const today = new Date();
     const quizDate = new Date(Date.parse(quiz.created));
     let data = [];
-    if (quizDate.getDate() != today.getDate() && quizDate.getMonth() != today.getMonth() && quizDate.getUTCFullYear() != today.getUTCFullYear()) {
+    if (quizDate.getDate() !== today.getDate() && quizDate.getMonth() !== today.getMonth() && quizDate.getUTCFullYear() !== today.getUTCFullYear()) {
       data = [
         {
           name: quiz.leftWord,

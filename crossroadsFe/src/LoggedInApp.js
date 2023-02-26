@@ -45,7 +45,7 @@ function LoggedInApp(props) {
   });
 
   async function handleVote(stateVar) {
-    if (buttonState == 'None') {
+    if (buttonState === 'None') {
       try {
         await axios.post('/quizzes/plays/', {choice: stateVar});
         mutate();
@@ -73,7 +73,7 @@ function LoggedInApp(props) {
         setButtonState(quiz.plays[0].choice);
       }
     }
-  })
+  }, [isQuizLoading, quiz.plays]);
 
 
   async function handleOpenClose(stateVar) {
@@ -86,11 +86,14 @@ function LoggedInApp(props) {
     return (<CircularProgress color="secondary" />);
   }
 
-  if (error || quizError) {
-    if (!error) {
-      error = quizError;
+  if (error || quizError || !quiz.id) {
+    let toDisplay = error;
+    if (!error || !quiz.id) {
+      toDisplay = "No Quiz today! Come back later";
+    } else {
+      toDisplay = "No Soup for You!"
     }
-    return (<Alert severity="error">There is an error {error}</Alert>);
+    return (<Alert severity="error">There is an error: {toDisplay}</Alert>);
   }
 
   
@@ -145,7 +148,7 @@ function LoggedInApp(props) {
 
 
         <Grid item xs={3}>
-          <Button variant="contained" disabled={buttonState == 'Left'} onClick={() => {handleVote('Left')}}>
+          <Button variant="contained" disabled={buttonState === 'Left'} onClick={() => {handleVote('Left')}}>
             {quiz.leftWord}
           </Button>
         </Grid>
@@ -155,7 +158,7 @@ function LoggedInApp(props) {
         </Grid>
 
         <Grid item xs={3}>
-          <Button variant = "contained" disabled={buttonState == 'Right'} onClick={() => {handleVote('Right')}}>
+          <Button variant = "contained" disabled={buttonState === 'Right'} onClick={() => {handleVote('Right')}}>
             {quiz.rightWord}
           </Button>
         </Grid>

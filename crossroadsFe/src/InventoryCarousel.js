@@ -1,7 +1,7 @@
 import * as React from 'react';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
-import { DialogTitle, CircularProgress, Alert, Dialog, Button, Typography, Paper, MobileStepper, Box, useTheme } from '@mui/material';
+import { DialogTitle, CircularProgress, Alert, Dialog, Button, MobileStepper, Box, useTheme } from '@mui/material';
 import PropTypes from 'prop-types';
 import InventoryCard from './InventoryCard.js';
 

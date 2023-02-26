@@ -14,8 +14,8 @@ function StoreCard(props) {
   const [disabled, setDisabled] = useState(false);
 
   function handleClose() {
-    this.setState({disabled: true});
-    this.props.onClose();
+    setDisabled(true);
+    props.onClose();
   }
 
   const createdAtDate = new Date(props.item.createdAt).toLocaleString("en-US")

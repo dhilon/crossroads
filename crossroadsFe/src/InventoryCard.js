@@ -14,8 +14,8 @@ function InventoryCard (props) {
   const [disabled, setDisabled] = useState(false);
 
   function handleClose() {
-    this.setState({disabled: true});
-    this.props.onClose();
+    setDisabled(true);
+    props.onClose();
   }
 
   const createdAtDate = new Date(props.item.storeItem.createdAt).toLocaleString("en-US")
