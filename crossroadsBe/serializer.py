@@ -63,7 +63,7 @@ class QuizSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Quiz
-        fields = ['id', 'created', 'rightWord', 'leftWord', 'ended', 'plays']
+        fields = '__all__'
         read_only_fields = ['id', 'created', 'rightWord', 'leftWord', 'ended', 'plays']
 
 class FeedbackSerializer(serializers.ModelSerializer):
