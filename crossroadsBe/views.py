@@ -4,17 +4,9 @@ from crossroadsBe.serializer import *
 from rest_framework import generics
 from datetime import datetime
 import random
-
-# Create your views here.
-
-from django.http import HttpResponse
 from .models import Profile, StoreItem, Quiz, Play, Feedback, Fact
 
-def index(request):
-    return HttpResponse("Hello, world. You're at the polls index.")
-
-def vote(request, question_id):
-    return HttpResponse("You're voting on quiz %s." % question_id)
+# Create your views here.
 
 def getDate(kwargs):
     if 'date' not in kwargs:
@@ -22,12 +14,6 @@ def getDate(kwargs):
     else:
         date = kwargs['date']
     return date
-
-
-def calendar(request):
-    latest_question_list = Play.objects.order_by('created')[:5]
-    output = ', '.join([q.created.__str__() for q in latest_question_list])
-    return HttpResponse("All quizzes: " + output)
 
 class FactDetail(generics.RetrieveAPIView):
     queryset = Fact.objects.all()
@@ -121,9 +107,10 @@ class QuizDetail(generics.RetrieveAPIView):
         return Quiz.getFromDate(date);
 
 class FeedbackList(generics.ListCreateAPIView):
+    queryset = Feedback.objects.all()
+    serializer_class = FeedbackSerializer
+
     def perform_create(self, serializer):
         serializer.save(
             author=self.request.user
             )
-    queryset = Feedback.objects.all()
-    serializer_class = FeedbackSerializer

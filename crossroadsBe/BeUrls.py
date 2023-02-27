@@ -6,9 +6,6 @@ from crossroadsBe.converters import DateConverter
 register_converter(DateConverter, 'date')
 
 urlpatterns = [
-    path('', views.index, name='index'),
-    path('<int:question_id>/', views.vote, name='vote'),
-    path('calendar/', views.calendar, name='play'),
     path('feedbacks/', views.FeedbackList.as_view()),
     path('fact/', views.FactDetail.as_view()),
     path('profile/', views.ProfileDetail.as_view()),
