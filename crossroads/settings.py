@@ -57,9 +57,12 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
+CSRF_TRUSTED_ORIGINS = [
     'https://crossroads-game.herokuapp.com'
+]
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000' 
 ]
 
 ROOT_URLCONF = 'crossroads.urls'
