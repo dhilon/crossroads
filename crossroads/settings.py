@@ -58,7 +58,8 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000'
+    'http://localhost:3000',
+    'http://crossroads-game.herokuapp.com'
 ]
 
 ROOT_URLCONF = 'crossroads.urls'
