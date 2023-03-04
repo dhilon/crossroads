@@ -73,7 +73,7 @@ function LoggedInApp(props) {
         setButtonState(quiz.plays[0].choice);
       }
     }
-  }, [isQuizLoading, quiz.plays]);
+  }, [isQuizLoading, quiz]);
 
 
   async function handleOpenClose(stateVar) {
