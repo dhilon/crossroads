@@ -1,12 +1,17 @@
+import os
 from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
+from django.views import View
 from crossroadsBe.serializer import *
 from rest_framework import generics
 from datetime import datetime
 import random
 from .models import Profile, StoreItem, Quiz, Play, Feedback, Fact
+from django.views.generic import TemplateView
+from django.views.decorators.cache import never_cache
 
 # Create your views here.
+index = never_cache(TemplateView.as_view(template_name='index.html'))
 
 def getDate(kwargs):
     if 'date' not in kwargs:
@@ -114,3 +119,15 @@ class FeedbackList(generics.ListCreateAPIView):
         serializer.save(
             author=self.request.user
             )
+        
+        
+class Assets(View):
+
+    def get(self, _request, filename):
+        path = os.path.join(os.path.dirname(__file__), 'static', filename)
+
+        if os.path.isfile(path):
+            with open(path, 'rb') as file:
+                return HttpResponse(file.read(), content_type='application/javascript')
+        else:
+            return HttpResponseNotFound()

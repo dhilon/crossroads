@@ -5,6 +5,8 @@ import localforage from "localforage";
 import { CircularProgress } from "@mui/material";
 import { SWRConfig } from 'swr'
 import axios from "axios";
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 
 class App extends React.Component {
     constructor(props) {

@@ -2,10 +2,13 @@ from django.urls import include, path, register_converter
 from django.contrib import admin
 from . import views
 from crossroadsBe.converters import DateConverter
+from django.conf import settings
+from django.conf.urls.static import static
 
 register_converter(DateConverter, 'date')
 
 urlpatterns = [
+    path('', views.index, name='index'),
     path('feedbacks/', views.FeedbackList.as_view()),
     path('fact/', views.FactDetail.as_view()),
     path('profile/', views.ProfileDetail.as_view()),
@@ -21,4 +24,4 @@ urlpatterns = [
     path('quizzes/plays/<int:pk2>/', views.PlayDetail.as_view()),
     path('streakLeaderboard/', views.StreakLeaderboard.as_view()),
     path('pointsLeaderboard/', views.PointsLeaderboard.as_view()),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
