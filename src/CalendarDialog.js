@@ -18,7 +18,13 @@ function toDateString(date) {
 function CalendarDialog(props) {
 
     const [date, setDate] = React.useState(new Date());
-    const { data: quiz, error, isLoading } = useSWR('/quizzes/'+toDateString(date)+"/");
+    
+    var dataToday;
+    var dateToday = new Date()
+
+    const { data: quiz, error, isLoading } = useSWR('/quizzes/'+toDateString(date));
+
+    
     const { onClose, open } = props;
 
     if (isLoading) {
@@ -27,13 +33,12 @@ function CalendarDialog(props) {
   
     if (error) {
       return (<Alert severity="error">There is an error {error}</Alert>)
-    } 
+    }
 
-    const today = new Date();
-    const quizDate = new Date(Date.parse(quiz.created));
-    let data = [];
-    if (quizDate.getDate() !== today.getDate() && quizDate.getMonth() !== today.getMonth() && quizDate.getUTCFullYear() !== today.getUTCFullYear()) {
-      data = [
+    const createdDate = new Date(quiz.created)
+
+    if (createdDate.getDate() !== dateToday.getDate()) {
+      dataToday = [
         {
           name: quiz.leftWord,
           val: quiz.leftPlayCount
@@ -42,17 +47,23 @@ function CalendarDialog(props) {
           name: quiz.rightWord,
           val: quiz.rightPlayCount
         }
-      ];
+      ]
     }
+    else {
+      dataToday = [
+        
+      ]
+    }
+
+    
     
 
     return (
       <Dialog onClose={onClose} open={open}>
-        <DialogTitle>Quick Calendar</DialogTitle>
+        <DialogTitle>Ultimate Calendar of Votes</DialogTitle>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <DatePicker
             renderInput={(props) => <TextField {...props} />}
-            label="Ultimate Calendar of Votes"
             value={date}
             onChange={(newValue) => {
               setDate(newValue);
@@ -61,7 +72,7 @@ function CalendarDialog(props) {
         </LocalizationProvider>
         <PieChart
           type = 'doughnut'
-          dataSource={data}
+          dataSource={dataToday}
           title = "Vote Counts"
         >
           <Series 

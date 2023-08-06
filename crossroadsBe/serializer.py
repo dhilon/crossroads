@@ -23,10 +23,18 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 
 class StoreItemSerializer(serializers.ModelSerializer):
+    
+    isBought = serializers.SerializerMethodField()
+    
     class Meta:
         model = StoreItem
         fields = '__all__'
-        read_only_fields = ['id', 'pointsCost', 'name', 'powerLevel', 'createdAt', 'description', 'img']
+        read_only_fields = ['id', 'pointsCost', 'name', 'powerLevel', 'createdAt', 'description', 'img', 'isBought']
+
+    def get_isBought(self, storeItem):
+        user = self.context['user']
+        inventory = Inventory.objects.get(user=user)
+        return storeItem.inventoryStoreItems.filter(inventory=inventory).count()>=1
     
 
 class InventoryStoreItemSerializer(serializers.ModelSerializer):
@@ -37,6 +45,11 @@ class InventoryStoreItemSerializer(serializers.ModelSerializer):
         model = InventoryStoreItem
         fields = ['id', 'storeItem', 'boughtAt']
         read_only_fields = ['id', 'storeItem', 'boughtAt']
+    
+    def create(self, validated_data):
+        return InventoryStoreItem.objects.create(**validated_data)
+    
+    
         
 
 
@@ -59,16 +72,16 @@ class PlaySerializer(serializers.ModelSerializer):
         return Play.objects.update(**validated_data)
 
 class QuizSerializer(serializers.ModelSerializer):
-    plays = serializers.SerializerMethodField("get_plays")
-    def get_plays(self, obj):
-        plays = Play.objects.filter(quiz = obj, player=self.context['user'])
-        plays = PlaySerializer(plays, many=True)
-        return plays.data
+    plays = serializers.SerializerMethodField()
 
     class Meta:
         model = Quiz
         fields = ['id', 'created', 'rightWord', 'leftWord', 'leftPlayCount', 'rightPlayCount', 'plays']
         read_only_fields = ['id', 'created', 'rightWord', 'leftWord', 'leftPlayCount', 'rightPlayCount', 'plays']
+    
+    def get_plays(self, obj):
+        plays = Play.objects.filter(quiz=obj)
+        return plays.count()
 
 class FeedbackSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True)

@@ -4,12 +4,12 @@ import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import { DialogTitle, CircularProgress, Alert, Dialog, Button, MobileStepper, Box, useTheme } from '@mui/material';
 import PropTypes from 'prop-types';
 import InventoryCard from './InventoryCard.js';
-
+import axios from 'axios';
 import useSWR from 'swr';
 
 function InventoryCarousel(props) {
 
-  const { data: items, error, isLoading } = useSWR('/inventoryStoreItems');
+  const { data: items, error, isLoading, mutate } = useSWR('/inventoryStoreItems');
   
   const theme = useTheme();
   const [activeStep, setActiveStep] = React.useState(0);
@@ -24,6 +24,17 @@ function InventoryCarousel(props) {
   };
 
   const { open, onClose } = props;
+
+  async function onBuy(id) {
+    try {
+      await axios.delete('/inventoryStoreItems/'+id+'/');
+      mutate();
+    }
+    catch (error) {
+      //do it again
+    }
+  }
+
 
   if (isLoading) {
     return (<CircularProgress />);
@@ -40,7 +51,7 @@ function InventoryCarousel(props) {
         <DialogTitle>Inventory</DialogTitle>
         <Box sx={{ maxWidth: 400, flexGrow: 1 }} onClose = {onClose}>
             
-          <InventoryCard item = {items[activeStep]}>
+          <InventoryCard item = {items[activeStep]} onBuy={onBuy}>
 
           </InventoryCard>
 

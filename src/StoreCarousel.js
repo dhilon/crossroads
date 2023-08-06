@@ -9,11 +9,11 @@ import {Dialog, DialogTitle, CircularProgress, Alert} from '@mui/material';
 import PropTypes from 'prop-types';
 import StoreCard from './StoreCard.js';
 import useSWR from 'swr';
+import axios from 'axios';
 
 function StoreCarousel(props) {
 
-  const { data: items, error, isLoading } = useSWR('/storeItems');
-
+  const { data: items, error, isLoading, mutate } = useSWR('/storeItems');
 
   const theme = useTheme();
   const [activeStep, setActiveStep] = React.useState(0);
@@ -27,6 +27,16 @@ function StoreCarousel(props) {
   };
 
   const { open, onClose } = props;
+
+  async function onBuy(id) {
+    try {
+      await axios.post('/inventoryStoreItems/', {storeItemId: id});
+      mutate();
+    }
+    catch (error) {
+      //do it again
+    }
+  }
 
   if (isLoading) {
     return (<CircularProgress />);
@@ -42,7 +52,7 @@ function StoreCarousel(props) {
       <Dialog onClose={onClose} open={open}>
         <DialogTitle>Store</DialogTitle>
         <Box sx={{ maxWidth: 400, flexGrow: 1 }} onClose = {onClose}>
-          <StoreCard item = {items[activeStep]}>
+          <StoreCard item = {items[activeStep]} onBuy = {onBuy}>
           </StoreCard>
           <MobileStepper
             steps={maxSteps}

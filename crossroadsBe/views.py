@@ -20,6 +20,10 @@ def getDate(kwargs):
         date = kwargs['date']
     return date
 
+def getNotToday(kwargs):
+    if 'date' in kwargs and datetime.now() != kwargs['date']:
+        return kwargs['date']
+
 class FactDetail(generics.RetrieveAPIView):
     queryset = Fact.objects.all()
     serializer_class = FactSerializer
@@ -57,12 +61,22 @@ class StoreItemList(generics.ListAPIView):
     def get_queryset(self):
         objs = StoreItem.objects.order_by("?")
         return objs[:3]
+    
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['user'] = self.request.user
+        return context
 
 
 
 class StoreItemDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = StoreItem.objects.all()
     serializer_class = StoreItemSerializer
+    
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['user'] = self.request.user
+        return context
 
 class PlayList(generics.ListCreateAPIView):
     serializer_class = PlaySerializer
@@ -87,29 +101,64 @@ class PlayDetail(generics.RetrieveUpdateAPIView):
     def get_object(self):
         return Play.objects.get(pk=self.kwargs['pk2']) 
 
-class InventoryStoreItemList(generics.ListAPIView):
+class InventoryStoreItemList(generics.ListCreateAPIView):
     serializer_class = InventoryStoreItemSerializer
     def get_queryset(self):
         inventory = Inventory.objects.get(user=self.request.user)
         return InventoryStoreItem.objects.filter(inventory=inventory)
+    
+    def perform_create(self, serializer):
+        inventory = Inventory.objects.get(user=self.request.user)
+        storeItem = StoreItem.objects.get(pk=self.request.data['storeItemId'])
+        
+        serializer.save(
+            inventory=inventory,
+            storeItem=storeItem
+            )
+    
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['user'] = self.request.user
+        return context
 
 class InventoryStoreItemDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = InventoryStoreItem.objects.all()
     serializer_class = InventoryStoreItemSerializer
 
+    
+    def perform_destroy(self, instance):
+        return super().perform_destroy(instance)
+    
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['user'] = self.request.user
+        return context
 
-class QuizDetail(generics.RetrieveAPIView):
-    queryset = Quiz.objects.all()
+
+class QuizDetail(generics.RetrieveUpdateAPIView):
+    
     serializer_class = QuizSerializer
+    queryset = Quiz.objects.all()
+    
+    def get_object(self):
+        return Quiz.getFromDate(getDate(self.kwargs));
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
         context['user'] = self.request.user
         return context
 
-    def get_object(self):
-        date = getDate(self.kwargs)
-        return Quiz.getFromDate(date);
+class QuizList(generics.ListCreateAPIView):
+    
+    serializer_class = QuizSerializer
+    
+    def get_queryset(self):
+        return Quiz.objects.all();
+    
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['user'] = self.request.user
+        return context
 
 class FeedbackList(generics.ListCreateAPIView):
     queryset = Feedback.objects.all()

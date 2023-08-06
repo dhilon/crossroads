@@ -25,7 +25,8 @@ import axios from 'axios';
 
 function LoggedInApp(props) {
   const { data: profile, error, isLoading } = useSWR('/profile/');
-  const { data: quiz, error: quizError, isLoading: isQuizLoading, mutate} = useSWR('/quizzes/');
+  const { data: quizzes, error: quizError, isLoading: isQuizLoading, mutate} = useSWR('/quizzes/');
+  const { data: plays, error: playError, isLoading: isPlayLoading} = useSWR('/quizzes/plays');
   const [buttonState, setButtonState] = useState('None');
 
   
@@ -47,17 +48,8 @@ function LoggedInApp(props) {
   async function handleVote(stateVar) {
     if (buttonState === 'None') {
       try {
+        setButtonState(stateVar)
         await axios.post('/quizzes/plays/', {choice: stateVar});
-        mutate();
-      }
-      catch (error) {
-        //do it again
-      }
-    }
-
-    else {
-      try {
-        await axios.put('/quizzes/plays/' + quiz.plays[0].id + "/", {choice: stateVar});
         mutate();
       }
       catch (error) {
@@ -68,12 +60,10 @@ function LoggedInApp(props) {
   }
 
   useEffect(() => {
-    if (!isQuizLoading && quiz.plays) {
-      if (quiz.plays.length > 0) {
-        setButtonState(quiz.plays[0].choice);
-      }
+    if (plays && plays.length > 0) {
+      setButtonState(plays[0].choice);
     }
-  }, [isQuizLoading, quiz]);
+  }, [isQuizLoading, quizzes]);
 
 
   async function handleOpenClose(stateVar) {
@@ -82,19 +72,19 @@ function LoggedInApp(props) {
     setState(newState);
   }
 
-  if (isLoading || isQuizLoading) {
+  if (isLoading || isQuizLoading || isPlayLoading) {
     return (<CircularProgress color="secondary" />);
   }
 
-  if (error || quizError || !quiz.id) {
-    let toDisplay = error;
-    if (!error || !quiz.id) {
-      toDisplay = "No Quiz today! Come back later";
-    } else {
-      toDisplay = "No Soup for You!"
+    if (error || quizError || playError) {
+      let toDisplay = error;
+      if (error) {
+        toDisplay = "No Quiz today! Come back later";
+      } else {
+        toDisplay = "No Soup for You!"
+      }
+      return (<Alert severity="error">There is an error: {toDisplay}</Alert>);
     }
-    return (<Alert severity="error">There is an error: {toDisplay}</Alert>);
-  }
 
   
   
@@ -149,7 +139,7 @@ function LoggedInApp(props) {
 
         <Grid item xs={3}>
           <Button variant="contained" disabled={buttonState === 'Left'} onClick={() => {handleVote('Left')}}>
-            {quiz.leftWord}
+            {quizzes[quizzes.length-1].leftWord}
           </Button>
         </Grid>
 
@@ -159,7 +149,7 @@ function LoggedInApp(props) {
 
         <Grid item xs={3}>
           <Button variant = "contained" disabled={buttonState === 'Right'} onClick={() => {handleVote('Right')}}>
-            {quiz.rightWord}
+            {quizzes[quizzes.length-1].rightWord}
           </Button>
         </Grid>
 

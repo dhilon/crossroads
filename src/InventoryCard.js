@@ -13,9 +13,9 @@ function InventoryCard (props) {
 
   const [disabled, setDisabled] = useState(false);
 
-  function handleClose() {
+  function handleBuy() {
     setDisabled(true);
-    props.onClose();
+    props.onBuy(props.item.id);
   }
 
   const createdAtDate = new Date(props.item.storeItem.createdAt).toLocaleString("en-US")
@@ -51,7 +51,8 @@ function InventoryCard (props) {
               </Typography>
               
               <Typography variant="body2">
-                {props.item.storeItem.description}
+                "{props.item.storeItem.description}"
+                <br />
                 Cost: {props.item.storeItem.pointsCost}
                 <br />
                 Created: {createdAtDate}
@@ -60,7 +61,7 @@ function InventoryCard (props) {
               </Typography>
             </CardContent>
           <CardActions>
-            <Button size="small" onClick = {handleClose} disabled = {disabled}>
+            <Button size="small" onClick = {handleBuy} disabled = {disabled}>
               Use
             </Button>
           </CardActions>

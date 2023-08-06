@@ -11,11 +11,11 @@ import {
 
 
 function StoreCard(props) {
-  const [disabled, setDisabled] = useState(false);
+  const [disabled, setDisabled] = useState(props.item.isBought);
 
-  function handleClose() {
+  function handleBuy() {
     setDisabled(true);
-    props.onClose();
+    props.onBuy(props.item.id);
   }
 
   const createdAtDate = new Date(props.item.createdAt).toLocaleString("en-US")
@@ -50,14 +50,15 @@ function StoreCard(props) {
               </Typography>
               
               <Typography variant="body2">
-                {props.item.description}
+                "{props.item.description}"
+                <br />
                 Cost: {props.item.pointsCost}
                 <br />
                 Created: {createdAtDate}
               </Typography>
             </CardContent>
           <CardActions>
-            <Button size="small" onClick = {handleClose} disabled = {disabled}>
+            <Button size="small" onClick = {handleBuy} disabled = {disabled}>
               Buy
             </Button>
           </CardActions>

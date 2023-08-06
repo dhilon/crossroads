@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-#SECRET_KEY = 'django-insecure-5__ce-bsii4_unnut!7yu1=-eg6z$a0hg&u#f#+9uwz_^swk=%'
+SECRET_KEY = 'django-insecure-5__ce-bsii4_unnut!7yu1=-eg6z$a0hg&u#f#+9uwz_^swk=%'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -139,7 +139,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 PASSWORDLESS_AUTH = {
    'PASSWORDLESS_AUTH_TYPES': ['EMAIL'],
-   'PASSWORDLESS_EMAIL_NOREPLY_ADDRESS': 'noreply@example.com',
+   'PASSWORDLESS_EMAIL_NOREPLY_ADDRESS': 'noreply@crossroads-game.herokuapp.com',
 }
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 

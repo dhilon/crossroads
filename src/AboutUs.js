@@ -19,7 +19,7 @@ function AboutUsCard(props) {
               Dhilon Prasad
             </Typography>
             <Typography sx={{ mb: 1.5 }} color="text.secondary">
-              Age: 16
+              Age: 17
             </Typography>
             <Typography variant="body2">
               Hobbies: 
