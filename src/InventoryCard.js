@@ -11,11 +11,12 @@ import {
 
 function InventoryCard (props) {
 
-  const [disabled, setDisabled] = useState(false);
-
   function handleBuy() {
-    setDisabled(true);
     props.onBuy(props.item.id);
+  }
+
+  if (!props.item) {
+    return (<h3> Missing Inventory Item</h3>);
   }
 
   const createdAtDate = new Date(props.item.storeItem.createdAt).toLocaleString("en-US")
@@ -61,7 +62,7 @@ function InventoryCard (props) {
               </Typography>
             </CardContent>
           <CardActions>
-            <Button size="small" onClick = {handleBuy} disabled = {disabled}>
+            <Button size="small" onClick = {handleBuy} >
               Use
             </Button>
           </CardActions>
