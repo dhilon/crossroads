@@ -11,10 +11,8 @@ import {
 
 
 function StoreCard(props) {
-  const [disabled, setDisabled] = useState(props.item.isBought);
 
   function handleBuy() {
-    setDisabled(true);
     props.onBuy(props.item.id);
   }
 
@@ -58,7 +56,7 @@ function StoreCard(props) {
               </Typography>
             </CardContent>
           <CardActions>
-            <Button size="small" onClick = {handleBuy} disabled = {disabled}>
+            <Button size="small" onClick = {handleBuy} disabled = {props.item.isBought}>
               Buy
             </Button>
           </CardActions>

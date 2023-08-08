@@ -10,10 +10,11 @@ import PropTypes from 'prop-types';
 import StoreCard from './StoreCard.js';
 import useSWR from 'swr';
 import axios from 'axios';
+import { mutate } from "swr";
 
 function StoreCarousel(props) {
 
-  const { data: items, error, isLoading, mutate } = useSWR('/storeItems');
+  const { data: items, error, isLoading, mutate: storeItemsMutate } = useSWR('/storeItems');
 
   const theme = useTheme();
   const [activeStep, setActiveStep] = React.useState(0);
@@ -31,7 +32,8 @@ function StoreCarousel(props) {
   async function onBuy(id) {
     try {
       await axios.post('/inventoryStoreItems/', {storeItemId: id});
-      mutate();
+      storeItemsMutate();
+      mutate("/inventoryStoreItems")
     }
     catch (error) {
       //do it again

@@ -6,10 +6,11 @@ import PropTypes from 'prop-types';
 import InventoryCard from './InventoryCard.js';
 import axios from 'axios';
 import useSWR from 'swr';
+import { mutate } from "swr";
 
 function InventoryCarousel(props) {
 
-  const { data: items, error, isLoading, mutate } = useSWR('/inventoryStoreItems');
+  const { data: items, error, isLoading, mutate: inventoryStoreItemsMutate } = useSWR('/inventoryStoreItems');
   
   const theme = useTheme();
   const [activeStep, setActiveStep] = React.useState(0);
@@ -28,7 +29,8 @@ function InventoryCarousel(props) {
   async function onBuy(id) {
     try {
       await axios.delete('/inventoryStoreItems/'+id+'/');
-      mutate();
+      inventoryStoreItemsMutate();
+      mutate("/storeItems");
     }
     catch (error) {
       //do it again
@@ -45,17 +47,28 @@ function InventoryCarousel(props) {
 
   const maxSteps = items.length;
 
+  if (maxSteps === 0) {
+    return (
+      <Dialog onClose={onClose} open={open}>
+        <DialogTitle>Inventory</DialogTitle>
+        <Box sx={{ maxWidth: 400, flexGrow: 1 }} onClose = {onClose}>
+          <h3>There are no items in your inventory!</h3>
+        </Box>
+      </Dialog>
+      );
+  }
+
+  if (activeStep >= maxSteps) {
+    setActiveStep(maxSteps-1);
+  }
+
   if (open) {
     return (
       <Dialog onClose={onClose} open={open}>
         <DialogTitle>Inventory</DialogTitle>
         <Box sx={{ maxWidth: 400, flexGrow: 1 }} onClose = {onClose}>
-            
           <InventoryCard item = {items[activeStep]} onBuy={onBuy}>
-
           </InventoryCard>
-
-
           <MobileStepper
             steps={maxSteps}
             position="static"

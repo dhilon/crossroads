@@ -63,10 +63,7 @@ class PointsLeaderboard(generics.ListAPIView):
 
 class StoreItemList(generics.ListAPIView):
     serializer_class = StoreItemSerializer
-    
-    def get_queryset(self):
-        objs = StoreItem.objects.order_by("?")
-        return objs[:3]
+    queryset = StoreItem.objects.all()
     
     def get_serializer_context(self):
         context = super().get_serializer_context()

@@ -25,8 +25,8 @@ import axios from 'axios';
 
 function LoggedInApp(props) {
   const { data: profile, error, isLoading } = useSWR('/profile/');
-  const { data: quizzes, error: quizError, isLoading: isQuizLoading, mutate} = useSWR('/quizzes/');
-  const { data: plays, error: playError, isLoading: isPlayLoading} = useSWR('/quizzes/plays');
+  const { data: quiz, error: quizError, isLoading: isQuizLoading} = useSWR('/quizzes/');
+  const { data: plays, error: playError, isLoading: isPlayLoading, mutate} = useSWR('/quizzes/plays');
   const [buttonState, setButtonState] = useState('None');
 
   
@@ -63,7 +63,7 @@ function LoggedInApp(props) {
     if (plays && plays.length > 0) {
       setButtonState(plays[0].choice);
     }
-  }, [isQuizLoading, quizzes]);
+  }, [isPlayLoading, isQuizLoading, plays]);
 
 
   async function handleOpenClose(stateVar) {
@@ -76,19 +76,15 @@ function LoggedInApp(props) {
     return (<CircularProgress color="secondary" />);
   }
 
-    if (error || quizError || playError) {
-      let toDisplay = error;
-      if (quizError) {
-        toDisplay = "No Quiz today! Come back later";
-      } else {
-        toDisplay = "No Soup for You!"
-      }
-      return (<Alert severity="error">There is an error: {toDisplay}</Alert>);
+  if (error || quizError || playError) {
+    let toDisplay = error;
+    if (error) {
+      toDisplay = "No Quiz today! Come back later";
+    } else {
+      toDisplay = "No Soup for You!"
     }
-
-  
-  
-
+    return (<Alert severity="error">There is an error: {toDisplay}</Alert>);
+  }
 
   return (
     <div className="App">
@@ -139,7 +135,7 @@ function LoggedInApp(props) {
 
         <Grid item xs={3}>
           <Button variant="contained" disabled={buttonState === 'Left'} onClick={() => {handleVote('Left')}}>
-            {quizzes[quizzes.length-1].leftWord}
+            {quiz.leftWord}
           </Button>
         </Grid>
 
@@ -149,7 +145,7 @@ function LoggedInApp(props) {
 
         <Grid item xs={3}>
           <Button variant = "contained" disabled={buttonState === 'Right'} onClick={() => {handleVote('Right')}}>
-            {quizzes[quizzes.length-1].rightWord}
+            {quiz.rightWord}
           </Button>
         </Grid>
 
