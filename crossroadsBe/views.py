@@ -34,13 +34,19 @@ class FactDetail(generics.RetrieveAPIView):
             return Fact(title = "This is a bug.")
         return objs[0]
 
-class ProfileDetail(generics.RetrieveAPIView):
+class ProfileDetail(generics.RetrieveUpdateAPIView):
     serializer_class = ProfileSerializer
     queryset = Profile.objects.all()
 
     def get_object(self):
         obj = Profile.objects.get(user=self.request.user)
         return obj
+    
+    def perform_update(self):
+        prof = ProfileDetail.get_object(self)
+        prof.hoursPlayed += 1
+        prof.points += 1
+        ProfileSerializer.update(self, instance = prof)
 
 
 class StreakLeaderboard(generics.ListAPIView):
@@ -86,10 +92,13 @@ class PlayList(generics.ListCreateAPIView):
         return Play.objects.filter(quiz = quiz, player=self.request.user)
 
     def perform_create(self, serializer):
+        self.request.user.profile.hoursPlayed += 1
+        ProfileDetail.perform_update(self=self)
         serializer.save(
             quiz=Quiz.getFromDate(getDate(self.kwargs)),
             player=self.request.user
             )
+        
 
 class PlayDetail(generics.RetrieveUpdateAPIView):
     serializer_class = PlaySerializer

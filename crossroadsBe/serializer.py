@@ -21,6 +21,8 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['id', 'created', 'streak', 'user', 'points', 'hoursPlayed', 'hoursWon', 'highestStreak', 'highestStreakRank']
 
+    def update(self, instance):
+        Profile.save(self=instance)
 
 class StoreItemSerializer(serializers.ModelSerializer):
     

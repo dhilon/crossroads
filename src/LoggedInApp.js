@@ -78,7 +78,7 @@ function LoggedInApp(props) {
 
     if (error || quizError || playError) {
       let toDisplay = error;
-      if (error) {
+      if (quizError) {
         toDisplay = "No Quiz today! Come back later";
       } else {
         toDisplay = "No Soup for You!"
