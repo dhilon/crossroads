@@ -76,9 +76,9 @@ function LoggedInApp(props) {
     return (<CircularProgress color="secondary" />);
   }
 
-  if (error || quizError || playError) {
+  if (error || quizError || playError || !quiz.leftWord) {
     let toDisplay = error;
-    if (error) {
+    if (quizError || !quiz.leftWord) {
       toDisplay = "No Quiz today! Come back later";
     } else {
       toDisplay = "No Soup for You!"

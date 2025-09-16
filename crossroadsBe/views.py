@@ -89,7 +89,7 @@ class PlayList(generics.ListCreateAPIView):
         return Play.objects.filter(quiz = quiz, player=self.request.user)
 
     def perform_create(self, serializer):
-        self.request.user.profile.hoursPlayed += 1
+        
         ProfileDetail.perform_update(self=self)
         serializer.save(
             quiz=Quiz.getFromDate(getDate(self.kwargs)),
@@ -141,13 +141,16 @@ class InventoryStoreItemDetail(generics.RetrieveUpdateDestroyAPIView):
         return context
 
 
-class QuizDetail(generics.RetrieveUpdateAPIView):
+class QuizDetail(generics.RetrieveUpdateDestroyAPIView):
     
     serializer_class = QuizSerializer
     queryset = Quiz.objects.all()
     
     def get_object(self):
         return Quiz.getFromDate(getDate(self.kwargs));
+    
+    def perform_destroy(self, instance):
+        return super().perform_destroy(instance)
 
     def get_serializer_context(self):
         context = super().get_serializer_context()

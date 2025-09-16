@@ -5,6 +5,7 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.conf import settings
 from rest_framework.authtoken.models import Token
+import openai
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
@@ -59,7 +60,7 @@ class InventoryStoreItem(models.Model):
     boughtAt = models.DateTimeField(auto_now_add=True)
         
 class Quiz(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateField(auto_now_add=True, unique=True)
     rightWord = models.CharField(max_length=32, default = "right")
     leftWord = models.CharField(max_length=32, default = "left")
 
@@ -70,9 +71,17 @@ class Quiz(models.Model):
         return Play.objects.filter(quiz = self, choice='Right').count()
 
     def getFromDate(date):
-        return Quiz.objects.filter(created__year = date.year,
+        getQuiz = Quiz.objects.filter(created__year = date.year,
                             created__month = date.month,
-                            created__day = date.day).first();
+                            created__day = date.day);
+        
+        getQuiz = getQuiz.first()
+        if (getQuiz is None):
+            chat_completion = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": "give me two unique interesting opposite words that you haven't given me before separated by a colon"}])
+            choices = chat_completion.choices[0].message.content.split(':')
+            getQuiz = Quiz(rightWord=choices[0], leftWord=choices[1])
+            getQuiz.save()
+        return getQuiz
 
 
 class Play(models.Model):
