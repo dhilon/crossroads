@@ -69,3 +69,17 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
 # Crossroads
+
+## Local development
+
+- Backend (inside Python venv):
+  ```bash
+  source venv/bin/activate
+  python manage.py runserver 127.0.0.1:8000
+  ```
+
+- Frontend (from the React app directory):
+  ```bash
+  cd src
+  npm start
+  ```

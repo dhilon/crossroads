@@ -38,10 +38,9 @@ environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["crossroads-game.herokuapp.com", "127.0.0.1:8000", "localhost"]
+ALLOWED_HOSTS = ["crossroads-game.herokuapp.com", "127.0.0.1", "localhost"]
 
-#
-# openaiClient =
+
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
@@ -87,9 +86,18 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 CSRF_TRUSTED_ORIGINS = [
     "https://crossroads-game.herokuapp.com",
     "http://localhost:3000",
+    "http://localhost:8002",
+    "http://127.0.0.1:8002",
 ]
 
-CORS_ALLOWED_ORIGINS = ["http://localhost:3000"]
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost:8002",
+    "http://127.0.0.1:8002",
+]
+
+CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = "crossroads.urls"
 
@@ -127,17 +135,21 @@ REST_FRAMEWORK = {
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
+DATABASES = {"default": {}}
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "crossroadsDb",
-        "USER": "dhilon",
-        "PASSWORD": "Basketball1!",
-        "HOST": "127.0.0.1",
-        "PORT": "5432",
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+if DATABASE_URL:
+    import dj_database_url
+
+    DATABASES["default"] = dj_database_url.parse(
+        DATABASE_URL, conn_max_age=600, ssl_require=False
+    )
+else:
+    DATABASES["default"] = {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
     }
-}
 
 
 # Password validation
@@ -192,4 +204,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 import django_heroku
 
-django_heroku.settings(locals())
+# Avoid overriding local DATABASES with SSL-required settings
+if DEBUG:
+    django_heroku.settings(locals(), databases=False)
+else:
+    django_heroku.settings(locals())

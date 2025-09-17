@@ -5,6 +5,7 @@ import localforage from "localforage";
 import { CircularProgress } from "@mui/material";
 import { SWRConfig } from 'swr'
 import axios from "axios";
+import { swrFetcher } from "./apiClient";
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 
@@ -21,18 +22,20 @@ class App extends React.Component {
     }
 
 
+
+
     componentDidMount() {
         this.loadToken();
     }
 
     enableLogin(token) {
         axios.defaults.headers.common['Authorization'] = "Token " + token;
-        this.setState({token: token})
+        this.setState({ token: token })
     }
 
     disableLogin() {
         delete axios.defaults.headers.common.Authorization;
-        this.setState({token: ''})
+        this.setState({ token: '' })
     }
 
     async loadToken() {
@@ -43,10 +46,10 @@ class App extends React.Component {
             } else {
                 this.enableLogin(token);
             }
-            this.setState({loading: false});
+            this.setState({ loading: false });
         }
         catch {
-           // do nothing because we are still loading 
+            // do nothing because we are still loading 
         }
 
     }
@@ -57,9 +60,9 @@ class App extends React.Component {
             this.enableLogin(token);
         }
         catch (error) {
-            this.setState({errorToken: "You entered something wrong ..." + error.message});
+            this.setState({ errorToken: "You entered something wrong ..." + error.message });
         }
-        
+
     }
 
     async handleLogOut() {
@@ -70,21 +73,21 @@ class App extends React.Component {
         catch (error) {
             this.disableLogin();
         }
-        
+
     }
 
-    render () {
+    render() {
         if (this.state.loading) {
-            return(<CircularProgress color="secondary" />);
+            return (<CircularProgress color="secondary" />);
         }
         else if (this.state.token !== "") {
             return (<SWRConfig value={{
-                fetcher: url => axios.get(url).then(res => res.data) 
+                fetcher: swrFetcher
             }}>
-                <LoggedInApp handleLogOut = {this.handleLogOut}/>
-            </SWRConfig>);        
-            } else {
-            return (<LoggedOutApp handleLogIn = {this.handleLogIn} errorToken = {this.state.errorToken}/>);
+                <LoggedInApp handleLogOut={this.handleLogOut} />
+            </SWRConfig>);
+        } else {
+            return (<LoggedOutApp handleLogIn={this.handleLogIn} errorToken={this.state.errorToken} />);
         }
     }
 }

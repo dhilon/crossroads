@@ -1,15 +1,14 @@
 import * as React from "react";
-import { useState } from 'react';
 import {
-    Button,
-    Card, 
-    CardActions, 
-    CardContent, 
-    Typography,
-    Box
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  Typography,
+  Box
 } from '@mui/material';
 
-function InventoryCard (props) {
+function InventoryCard(props) {
 
   function handleBuy() {
     props.onBuy(props.item.id);
@@ -24,53 +23,53 @@ function InventoryCard (props) {
 
   return (
     <div>
-      
+
       <Box
-          component="img"
-          sx={{
-              height: 255,
-              display: 'block',
-              maxWidth: 400,
-              overflow: 'hidden',
-              width: '100%',
-          }}
-          src={props.item.storeItem.img}
-          alt={props.item.storeItem.name}
+        component="img"
+        sx={{
+          height: 255,
+          display: 'block',
+          maxWidth: 400,
+          overflow: 'hidden',
+          width: '100%',
+        }}
+        src={props.item.storeItem.img}
+        alt={props.item.storeItem.name}
       />
       <Card variant="outlined">
         <React.Fragment>
-            <CardContent>
+          <CardContent>
 
-              <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                Store Item: {props.item.storeItem.id}
-              </Typography>
-              <Typography variant="h5" component="div">
-                {props.item.storeItem.name}
-              </Typography>
-              <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                Strength: {props.item.storeItem.powerLevel}
-              </Typography>
-              
-              <Typography variant="body2">
-                "{props.item.storeItem.description}"
-                <br />
-                Cost: {props.item.storeItem.pointsCost}
-                <br />
-                Created: {createdAtDate}
-                <br />
-                Bought At: {boughtAtDate}
-              </Typography>
-            </CardContent>
+            <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+              Store Item: {props.item.storeItem.id}
+            </Typography>
+            <Typography variant="h5" component="div">
+              {props.item.storeItem.name}
+            </Typography>
+            <Typography sx={{ mb: 1.5 }} color="text.secondary">
+              Strength: {props.item.storeItem.powerLevel}
+            </Typography>
+
+            <Typography variant="body2">
+              "{props.item.storeItem.description}"
+              <br />
+              Cost: {props.item.storeItem.pointsCost}
+              <br />
+              Created: {createdAtDate}
+              <br />
+              Bought At: {boughtAtDate}
+            </Typography>
+          </CardContent>
           <CardActions>
-            <Button size="small" onClick = {handleBuy} >
+            <Button size="small" onClick={handleBuy} >
               Use
             </Button>
           </CardActions>
         </React.Fragment>
       </Card>
     </div>
-    
-    
+
+
   )
 };
 
