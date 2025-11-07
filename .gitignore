@@ -10,3 +10,4 @@ build/
 staticfiles/
 .git-filter-repo-replacements.txt
 *.bundle
+package-lock.json
