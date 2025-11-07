@@ -1,6 +1,199 @@
 """
 Django settings for crossroads project.
 
+Updated for Python 3.14 and psycopg[binary] (psycopg3) support.
+"""
+
+import os
+from pathlib import Path
+import environ
+from dotenv import load_dotenv
+import openai
+import dj_database_url
+
+# --------------------------------------------------------------------
+# ENVIRONMENT SETUP
+# --------------------------------------------------------------------
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv()
+env = environ.Env(DEBUG=(bool, False))
+environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
+
+# --------------------------------------------------------------------
+# BASIC SETTINGS
+# --------------------------------------------------------------------
+
+DEBUG = env("DEBUG", default=True)
+SECRET_KEY = env(
+    "DJANGO_SECRET_KEY",
+    default="django-insecure-placeholder-secret-key",
+)
+ALLOWED_HOSTS = [
+    "crossroads-game.herokuapp.com",
+    "127.0.0.1",
+    "localhost",
+]
+
+openai.api_key = os.getenv("OPENAI_API_KEY")
+
+# --------------------------------------------------------------------
+# APPLICATIONS
+# --------------------------------------------------------------------
+
+INSTALLED_APPS = [
+    "corsheaders",
+    "crossroadsBe.apps.CrossroadsBeConfig",
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django_celery_results",
+    "whitenoise.runserver_nostatic",
+    "django.contrib.staticfiles",
+    "rest_framework",
+    "rest_framework.authtoken",
+    "drfpasswordless",
+    "crossroads",
+]
+
+# --------------------------------------------------------------------
+# CELERY SETTINGS
+# --------------------------------------------------------------------
+CELERY_TIMEZONE = "America/Los_Angeles"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 120
+CELERY_RESULT_BACKEND = "django-db"
+
+# --------------------------------------------------------------------
+# MIDDLEWARE
+# --------------------------------------------------------------------
+MIDDLEWARE = [
+    "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+]
+
+# --------------------------------------------------------------------
+# CORS + CSRF CONFIGURATION
+# --------------------------------------------------------------------
+CSRF_TRUSTED_ORIGINS = [
+    "https://crossroads-game.herokuapp.com",
+    "http://localhost:3000",
+    "http://localhost:8002",
+    "http://127.0.0.1:8002",
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost:8002",
+    "http://127.0.0.1:8002",
+]
+
+CORS_ALLOW_CREDENTIALS = True
+
+# --------------------------------------------------------------------
+# TEMPLATES
+# --------------------------------------------------------------------
+ROOT_URLCONF = "crossroads.urls"
+
+TEMPLATES = [
+    {
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [os.path.join(BASE_DIR, "build")],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+            ],
+        },
+    },
+]
+
+WSGI_APPLICATION = "crossroads.wsgi.application"
+
+# --------------------------------------------------------------------
+# REST FRAMEWORK
+# --------------------------------------------------------------------
+REST_FRAMEWORK = {
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"
+    ],
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.BasicAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.TokenAuthentication",
+    ],
+}
+
+# --------------------------------------------------------------------
+# DATABASE CONFIGURATION
+# --------------------------------------------------------------------
+DATABASES = {
+    "default": dj_database_url.config(
+        default=os.getenv("DATABASE_URL"),
+        conn_max_age=600,
+        ssl_require=not DEBUG,  # SSL only on production (Heroku)
+    )
+    or {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+    }
+}
+
+# --------------------------------------------------------------------
+# PASSWORD VALIDATION
+# --------------------------------------------------------------------
+AUTH_PASSWORD_VALIDATORS = [
+    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
+]
+
+# --------------------------------------------------------------------
+# PASSWORDLESS AUTH CONFIG
+# --------------------------------------------------------------------
+PASSWORDLESS_AUTH = {
+    "PASSWORDLESS_AUTH_TYPES": ["EMAIL"],
+    "PASSWORDLESS_EMAIL_NOREPLY_ADDRESS": "noreply@crossroads-game.herokuapp.com",
+}
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+# --------------------------------------------------------------------
+# INTERNATIONALIZATION
+# --------------------------------------------------------------------
+LANGUAGE_CODE = "en-us"
+TIME_ZONE = "America/Los_Angeles"
+USE_I18N = True
+USE_TZ = True
+
+# --------------------------------------------------------------------
+# STATIC FILES
+# --------------------------------------------------------------------
+STATIC_URL = "static/"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "build/static")]
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
+# --------------------------------------------------------------------
+# DEFAULT PRIMARY KEY FIELD TYPE
+# --------------------------------------------------------------------
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+"""
+Django settings for crossroads project.
+
 Generated by 'django-admin startproject' using Django 4.0.6.
 
 For more information on this file, see
